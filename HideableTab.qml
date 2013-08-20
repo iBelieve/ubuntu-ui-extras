@@ -25,14 +25,16 @@ import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1
 
 Tab {
-    property bool show
+    id: root
+
+    property bool show: true
 
     onShowChanged: {
         parent.tabList = customUpdateTabList(parent)
     }
 
-    Binding {
-        target: parent
+    Connections {
+        target: root.parent
         onChildrenChanged: customUpdateTabList(parent)
     }
 
