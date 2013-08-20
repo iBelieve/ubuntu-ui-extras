@@ -6,6 +6,7 @@ A collection of QML widgets not available in the default Ubuntu UI Toolkit.
 ### Included Widgets ###
 
  * Sidebar
+ * HideableTab
 
 ### How to Use ###
 
