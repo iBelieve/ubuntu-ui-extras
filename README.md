@@ -17,3 +17,13 @@ Once Code Units is installed, you can use the Ubuntu UI Extras by running
     code use ubuntu-ui-extras
 
 And make sure you add `ubuntu-ui-extras` to your git ignore.
+
+To use a component from QML, import it like this:
+
+    import "ubuntu-ui-extras"
+    
+Or, if you're in a subdirectory like `ui` or `components`, you'll need
+
+    import "../ubuntu-ui-extras"
+    
+Than use whatever components you want just as any component in the Ubuntu UI Toolkit!
