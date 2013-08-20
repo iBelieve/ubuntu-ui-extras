@@ -1,7 +1,11 @@
 Ubuntu UI Extras
 ================
 
-A collection of QML widgets not available in the default Ubuntu UI Toolkit
+A collection of QML widgets not available in the default Ubuntu UI Toolkit.
+
+### Included Widgets ###
+
+ * Sidebar
 
 ### How to Use ###
 
