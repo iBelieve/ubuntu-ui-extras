@@ -24,10 +24,35 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1
 
+/*!
+    \qmltype Sidebar
+    \brief A sidebar component for use in adaptive layouts
+
+    To use, simply add an instance to your code, and anchor other components to it.
+
+    To show or hide, set the expanded property.
+
+    Examples:
+    \qml
+        property bool wideAspect: width > units.gu(80)
+
+        Sidebar {
+            expanded: wideAspect
+
+            // Anchoring is automatic
+        }
+    \endqml
+*/
 Rectangle {
     color: Qt.rgba(0.2,0.2,0.2,0.4)
 
     property bool expanded: true
+
+    anchors {
+        left: parent.left
+        top: parent.top
+        bottom: parent.bottom
+    }
 
     Item {
         ThinDivider {
@@ -54,9 +79,9 @@ Rectangle {
     width: units.gu(35)
 
 
-    x: expanded ? 0 : -width
+    anchors.leftMargin: expanded ? 0 : -width
 
-    Behavior on x {
+    Behavior on anchors.leftMargin {
         PropertyAnimation {
             duration: 250
         }
