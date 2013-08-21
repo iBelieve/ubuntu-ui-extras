@@ -23,80 +23,27 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1
+import QtQuick 2.0
 
-/*!
-    \qmltype Sidebar
-    \brief A sidebar component for use in adaptive layouts
+Item {
+    property string mode: "left" // or right
 
-    To use, simply add an instance to your code, and anchor other components to it.
+    ThinDivider {
+        id: divider
+        rotation: mode === "left" ? 90 : -90
 
-    To show or hide, set the expanded property.
+        width: parent.height
 
-    Examples:
-    \qml
-        property bool wideAspect: width > units.gu(80)
-
-        Sidebar {
-            expanded: wideAspect
-
-            // Anchoring is automatic
+        anchors {
+            left: undefined
+            right: undefined
+            centerIn: parent
         }
-    \endqml
-*/
-Rectangle {
-    id: root
-
-    color: Qt.rgba(0.2,0.2,0.2,0.4)
-
-    property bool expanded: true
-
-    property string mode: "left" // or "right"
+    }
+    width: divider.height
 
     anchors {
-        left: mode === "left" ? parent.left : undefined
-        right: mode === "right" ? parent.right : undefined
-        top: parent.top
-        bottom: parent.bottom
-    }
-
-    VerticalDivider {
-        mode: root.mode
-
-        anchors {
-            top: parent.top
-            bottom: parent.bottom
-            right: mode === "left" ? parent.right : undefined
-            left: mode === "right" ? parent.left : undefined
-            rightMargin: -1
-        }
-    }
-
-    width: units.gu(35)
-
-
-    anchors.leftMargin: expanded ? 0 : -width
-    anchors.rightMargin: expanded ? 0 : -width
-
-    Behavior on anchors.leftMargin {
-        PropertyAnimation {
-            duration: 250
-        }
-    }
-
-    Behavior on anchors.rightMargin {
-        PropertyAnimation {
-            duration: 250
-        }
-    }
-
-    default property alias contents: contents.data
-
-    Item {
-        id: contents
-
-        anchors {
-            fill: parent
-            rightMargin: 1
-        }
+        top: parent ? parent.top : undefined
+        bottom: parent ? parent.bottom : undefined
     }
 }
