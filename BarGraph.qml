@@ -5,7 +5,7 @@
  *                                                                         *
  * Ubuntu UI Extras - A collection of QML widgets not available            *
  *                    in the default Ubuntu UI Toolkit                     *
- * Copyright (C) 2013 Michael Spencer <spencers1993@gmail.com>             *
+ * Copyright (C) 2013 Michael Spencer <sonrisesoftware@gmail.com>             *
  *                                                                         *
  * This program is free software: you can redistribute it and/or modify    *
  * it under the terms of the GNU General Public License as published by    *
@@ -38,6 +38,14 @@ Item {
     property int barWidth: autoSize ? units.gu(3) : units.gu(3) // TODO: Auto calculate?
 
     property real scale: (graph.height - 2)/maxValue
+
+    function shouldDisplay(index) {
+        var max = 10
+        var total = count
+        print("Should Display?", 10 % (index * 10/total))
+        var result = 10 % (index * 10/total)
+        return true
+    }
 
     Row {
         id: legendBar
@@ -72,11 +80,13 @@ Item {
     UbuntuShape {
         id: graph
         color: "white"
+        //border.color: "darkgray"
         radius: "medium"
 
         anchors {
             top: legendBar.bottom
             left: parent.left
+            leftMargin: units.gu(4)
             right: parent.right
             bottom: parent.bottom
             margins: units.gu(2)
@@ -87,6 +97,7 @@ Item {
             model: root.maxValue + 1
 
             delegate: Rectangle {
+                visible: shouldDisplay(index)
                 color: index === root.maxValue || index === 0 ? "transparent" : "lightgray"
                 height: 1
                 y: root.scale * index + 1
@@ -96,23 +107,16 @@ Item {
                     margins: 1
                 }
 
-//                Label {
-//                    text: {
-//                        if (index === 0)
-//                            return "100%"
-//                        else if (index === graph.count - 1)
-//                            return "0%"
-//                        else
-//                            return ""
-//                    }
-//                    color: Theme.palette.normal.overlayText
-//                    anchors {
-//                        left: parent.left
-//                        leftMargin: units.gu(1)
-//                        bottom: parent.bottom
-//                        bottomMargin: units.gu(1)
-//                    }
-//                }
+                Label {
+                    text: root.maxValue - modelData
+                    visible: shouldDisplay(index)
+                    //color: Theme.palette.normal.overlayText
+                    anchors {
+                        right: parent.left
+                        rightMargin: units.gu(1)
+                        verticalCenter: parent.verticalCenter
+                    }
+                }
             }
         }
 

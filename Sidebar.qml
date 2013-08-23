@@ -5,7 +5,7 @@
  *                                                                         *
  * Ubuntu UI Extras - A collection of QML widgets not available            *
  *                    in the default Ubuntu UI Toolkit                     *
- * Copyright (C) 2013 Michael Spencer <spencers1993@gmail.com>             *
+ * Copyright (C) 2013 Michael Spencer <sonrisesoftware@gmail.com>             *
  *                                                                         *
  * This program is free software: you can redistribute it and/or modify    *
  * it under the terms of the GNU General Public License as published by    *
@@ -78,15 +78,19 @@ Rectangle {
     anchors.rightMargin: expanded ? 0 : -width
 
     Behavior on anchors.leftMargin {
-        PropertyAnimation {
-            duration: 250
-        }
+        UbuntuNumberAnimation {}
+
+//        PropertyAnimation {
+//            duration: 250
+//        }
     }
 
     Behavior on anchors.rightMargin {
-        PropertyAnimation {
-            duration: 250
-        }
+        UbuntuNumberAnimation {}
+
+//        PropertyAnimation {
+//            duration: 250
+//        }
     }
 
     default property alias contents: contents.data

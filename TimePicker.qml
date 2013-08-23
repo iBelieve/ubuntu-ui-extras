@@ -24,47 +24,52 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1
 
-Item {
-    id: root
+UbuntuShape {
+    anchors.centerIn: parent
+    width: childrenRect.width
+    height: childrenRect.height
+    color: Qt.rgba(0.2,0.2,0.2,0.2)
+    //gradientColor: Qt.rgba(0.2,0.2,0.2,0.4)
 
-    property var graph
-    property var values: []
-    property string label
+    Rectangle {
+        color: Qt.rgba(0.2,0.2,0.2,0.2)
 
-    anchors {
-        bottom: parent.bottom
-        bottomMargin: 1
-    }
-
-    Item {
-        width: labelItem.height
-        height: labelItem.width
-        anchors.top: parent.bottom
-        anchors.topMargin: units.gu(1.5)
-        anchors.horizontalCenter: parent.horizontalCenter
-        Label {
-            id: labelItem
-            rotation: -90
-            text: label
-            anchors.centerIn: parent
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: header.bottom
         }
-    }
 
-    Column {
-        id: column
-        anchors.bottom: parent.bottom
-        width: parent.width
+        width: units.gu(20)
+        height: units.gu(30)
 
-        Repeater {
-            id: repeater
-            model: values
-
-            delegate: Rectangle {
-                property int reversedIndex: repeater.count - index - 1
-                width: root.width
-                height: values[reversedIndex] * (graph.scale)
-                color: graph.colors[reversedIndex]
+        Spinner {
+            anchors {
+                left: parent.left
+                right: parent.horizontalCenter
+                top: parent.top
+                bottom: parent.bottom
             }
+
+            minValue: 1
+            value: 3
+            maxValue: 12
+        }
+        VerticalDivider {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.margins: 1
+        }
+
+        Spinner {
+            anchors {
+                left: parent.horizontalCenter
+                right: parent.right
+                top: parent.top
+                bottom: parent.bottom
+            }
+
+            minValue: 0
+            maxValue: 59
         }
     }
 }
