@@ -28,79 +28,71 @@ import Ubuntu.Components.ListItems 0.1
 Rectangle {
     id: swipeBackgroundItem
 
-    property alias iconSource: swipeDeleteIcon.source
-    property alias text: swipeBackgroundText.text
+    property string iconSource
+    property string text
 
     anchors.fill: parent
     //color: Theme.palette.normal.base;
     color: Qt.rgba(0.2,0.2,0.2,0.3)
 
     Image {
-        id: swipeDeleteIcon
-
-        property int slidingMargin: units.gu(2)
+        id: leftSwipeDeleteIcon
 
         anchors {
-            top: swipeBackgroundText.top
-            bottom: swipeBackgroundText.bottom
+            top: leftSwipeBackgroundText.top
+            right: leftSwipeBackgroundText.left
+            rightMargin: units.gu(1)
+            bottom: leftSwipeBackgroundText.bottom
         }
+        source: swipeBackgroundItem.iconSource
         width: height
+        visible: swipeBackgroundItem.state === "SwipingRight"
     }
 
     Label {
-        id: swipeBackgroundText
-
-        property int slidingMargin: units.gu(3)
+        id: leftSwipeBackgroundText
+        visible: swipeBackgroundItem.state === "SwipingRight"
+        text: swipeBackgroundItem.text
 
         anchors {
             verticalCenter: parent.verticalCenter
+            right: parent.right
+            rightMargin: units.gu(2)
         }
-
-        width: implicitWidth
 
         color: Theme.palette.normal.baseText
         fontSize: "large"
     }
 
-    states: [
-        State {
-            name: "SwipingRight"
-            PropertyChanges {
-                target: swipeBackgroundText;
-                restoreEntryValues: true
 
-                anchors.left: undefined
-                anchors.right: parent.right
-                anchors.rightMargin: swipeBackgroundText.slidingMargin
-            }
-            PropertyChanges {
-                target: swipeDeleteIcon;
-                restoreEntryValues: true
+    Image {
+        id: rightSwipeDeleteIcon
+        source: swipeBackgroundItem.iconSource
 
-                anchors.right: swipeBackgroundText.left
-                anchors.rightMargin: swipeDeleteIcon.slidingMargin
-                anchors.left: undefined
-            }
-        },
-
-        State {
-            name: "SwipingLeft"
-            PropertyChanges {
-                target: swipeBackgroundText;
-                restoreEntryValues: true
-
-                anchors.right: undefined
-                anchors.left: parent.left
-                anchors.leftMargin: swipeBackgroundText.slidingMargin
-            }
-            PropertyChanges {
-                target: swipeDeleteIcon;
-                restoreEntryValues: true
-
-                anchors.left: swipeBackgroundText.right
-                anchors.leftMargin: swipeDeleteIcon.slidingMargin
-                anchors.right: undefined
-            }
+        anchors {
+            top: rightSwipeBackgroundText.top
+            left: rightSwipeBackgroundText.right
+            leftMargin: units.gu(1)
+            bottom: rightSwipeBackgroundText.bottom
         }
-    ]
+        width: height
+        visible: swipeBackgroundItem.state === "SwipingLeft"
+    }
+
+    Label {
+        id: rightSwipeBackgroundText
+        visible: swipeBackgroundItem.state === "SwipingLeft"
+        text: swipeBackgroundItem.text
+
+        anchors {
+            verticalCenter: parent.verticalCenter
+            left: parent.left
+            leftMargin: units.gu(2)
+        }
+
+        color: Theme.palette.normal.baseText
+        fontSize: "large"
+    }
+
+    onStateChanged: print(state)
 }
