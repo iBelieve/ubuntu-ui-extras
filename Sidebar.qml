@@ -5,7 +5,7 @@
  *                                                                         *
  * Ubuntu UI Extras - A collection of QML widgets not available            *
  *                    in the default Ubuntu UI Toolkit                     *
- * Copyright (C) 2013 Michael Spencer <sonrisesoftware@gmail.com>             *
+ * Copyright (C) 2013 Michael Spencer <sonrisesoftware@gmail.com>          *
  *                                                                         *
  * This program is free software: you can redistribute it and/or modify    *
  * it under the terms of the GNU General Public License as published by    *
@@ -51,6 +51,7 @@ Rectangle {
     property bool expanded: true
 
     property string mode: "left" // or "right"
+    property alias header: headerItem.text
 
     anchors {
         left: mode === "left" ? parent.left : undefined
@@ -79,28 +80,47 @@ Rectangle {
 
     Behavior on anchors.leftMargin {
         UbuntuNumberAnimation {}
-
-//        PropertyAnimation {
-//            duration: 250
-//        }
     }
 
     Behavior on anchors.rightMargin {
         UbuntuNumberAnimation {}
-
-//        PropertyAnimation {
-//            duration: 250
-//        }
     }
 
     default property alias contents: contents.data
 
-    Item {
-        id: contents
+    Header {
+        id: headerItem
+
+        visible: text !== ""
+    }
+
+    Flickable {
+        id: flickable
+
+        clip: true
 
         anchors {
-            fill: parent
-            rightMargin: 1
+            top: headerItem.visible ? headerItem.bottom : parent.top
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+            rightMargin: mode === "left" ? 1 : 0
+            leftMargin: mode === "right" ? 1 : 0
         }
+
+        contentWidth: width
+        contentHeight: contents.height
+        interactive: contentHeight > height
+
+        Item {
+            id: contents
+
+            width: flickable.width
+            height: childrenRect.height
+        }
+    }
+
+    Scrollbar {
+        flickableItem: flickable
     }
 }

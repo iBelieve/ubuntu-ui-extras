@@ -5,7 +5,7 @@
  *                                                                         *
  * Ubuntu UI Extras - A collection of QML widgets not available            *
  *                    in the default Ubuntu UI Toolkit                     *
- * Copyright (C) 2013 Michael Spencer <sonrisesoftware@gmail.com>             *
+ * Copyright (C) 2013 Michael Spencer <sonrisesoftware@gmail.com>          *
  *                                                                         *
  * This program is free software: you can redistribute it and/or modify    *
  * it under the terms of the GNU General Public License as published by    *
