@@ -30,6 +30,22 @@ UbuntuShape {
     width: units.gu(20)
     height: units.gu(18)
 
+    property var initialDate: new Date()
+
+    property var date: {
+        var date = new Date()
+        date.setHours(0)
+        date.setMinutes(0)
+        date.setSeconds(0)
+        print("Date:", dateSpinner.value)
+        date.setDate(dateSpinner.value)
+        print("Month:", monthSpinner.selectedIndex)
+        date.setMonth(monthSpinner.selectedIndex)
+        print("Year", yearSpinner.value)
+        date.setFullYear(yearSpinner.value)
+        return date
+    }
+
     Item {
         id: rectangle
         //color: Qt.rgba(0.2,0.2,0.2,0.2)
@@ -42,23 +58,28 @@ UbuntuShape {
         }
 
         Spinner {
+            id: monthSpinner
             anchors {
                 left: parent.left
-                right: parent.horizontalCenter
                 top: parent.top
                 bottom: parent.bottom
+                right: parent.horizontalCenter
             }
 
-            minValue: 1
-            value: 3
-            maxValue: 12
+            value: values[initialDate.getMonth()]
+
+            width: units.gu(20)
+            values: ["January", "February", "March", "April",
+                "May", "June", "July", "August",
+                "September", "October", "November", "December"]
         }
         VerticalDivider {
-            anchors.horizontalCenter: parent.horizontalCenter
+            id: divider1
             anchors.margins: 1
+            anchors.horizontalCenter: parent.horizontalCenter
         }
 
-        Spinner {
+        Item {
             anchors {
                 left: parent.horizontalCenter
                 right: parent.right
@@ -66,8 +87,39 @@ UbuntuShape {
                 bottom: parent.bottom
             }
 
-            minValue: 0
-            maxValue: 59
+            Spinner {
+                id: dateSpinner
+                anchors {
+                    left: parent.left
+                    right: parent.horizontalCenter
+                    top: parent.top
+                    bottom: parent.bottom
+                }
+
+                value: initialDate.getDate()
+                minValue: 1
+                maxValue: 31
+            }
+
+            VerticalDivider {
+                id: divider2
+                anchors.margins: 1
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+            Spinner {
+                id: yearSpinner
+                anchors {
+                    left: parent.horizontalCenter
+                    right: parent.right
+                    top: parent.top
+                    bottom: parent.bottom
+                }
+
+                value: initialDate.getFullYear()
+                minValue: initialDate.getFullYear() - 5
+                maxValue: initialDate.getFullYear() + 10
+            }
         }
     }
 }

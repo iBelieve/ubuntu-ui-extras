@@ -34,28 +34,32 @@ Item {
     width: units.gu(10)
     height: units.gu(30)
 
-    property int value: 0
+    property alias selectedIndex: listView.currentIndex
 
-    onValueChanged: listView.currentIndex = value - minValue
+    onSelectedIndexChanged: {
+        value = model.get(listView.currentIndex).modelData
+    }
+
+    property var value: model.get(listView.currentIndex).modelData
+
+    property var values: []
+
+    onValuesChanged: {
+        model.clear()
+        for (var i = 0; i < values.length; i++) {
+            model.append({modelData: values[i]})
+        }
+    }
+
+    Component.onCompleted: {
+        createModel()
+        for (var i = 0; i < model.count; i++) {
+            if (model.get(i).modelData === value)
+                listView.currentIndex = i
+        }
+    }
 
     property int minValue: 0
-
-//    gradient: Gradient {
-//        GradientStop {
-//            position: 0
-//            color: Qt.rgba(0.2,0.2,0.2,0.4)
-//        }
-
-//        GradientStop {
-//            position: 0.5
-//            color: "transparent"
-//        }
-
-//        GradientStop {
-//            position: 1
-//            color: Qt.rgba(0.2,0.2,0.2,0.4)
-//        }
-//    }
 
     onMinValueChanged: {
         if (model.count === 0) {
@@ -84,8 +88,6 @@ Item {
             model.remove(model.count - 1)
         print("Model length", model.count)
     }
-
-    Component.onCompleted: createModel()
 
     function createModel() {
         for (var i = minValue; i <= maxValue; i++) {
