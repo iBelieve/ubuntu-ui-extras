@@ -32,6 +32,10 @@ import Ubuntu.Components.ListItems 0.1
 
     To show or hide, set the expanded property.
 
+    By default, the sidebar has a flickable built in, and whatever contents are added
+    will be placed in the flickable. When you want this disabled, or want to fill the
+    entire sidebar, set the autoFill property to false.
+
     Examples:
     \qml
         property bool wideAspect: width > units.gu(80)
@@ -94,6 +98,8 @@ Rectangle {
         visible: text !== ""
     }
 
+    property bool autoFlick: true
+
     Flickable {
         id: flickable
 
@@ -109,14 +115,28 @@ Rectangle {
         }
 
         contentWidth: width
-        contentHeight: contents.height
+        contentHeight: autoFlick ? contents.height : height
         interactive: contentHeight > height
 
         Item {
             id: contents
 
             width: flickable.width
-            height: childrenRect.height
+            height: autoFlick ? childrenRect.height : flickable.height
+        }
+
+        function getFlickableChild(item) {
+            if (item && item.hasOwnProperty("children")) {
+                for (var i=0; i < item.children.length; i++) {
+                    var child = item.children[i];
+                    if (internal.isVerticalFlickable(child)) {
+                        if (child.anchors.top === page.top || child.anchors.fill === page) {
+                            return item.children[i];
+                        }
+                    }
+                }
+            }
+            return null;
         }
     }
 
