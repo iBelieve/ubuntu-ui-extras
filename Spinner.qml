@@ -62,6 +62,9 @@ Item {
     property int minValue: 0
 
     onMinValueChanged: {
+        if (values.length > 0)
+            return
+
         if (model.count === 0) {
             createModel()
             return
@@ -78,6 +81,9 @@ Item {
     property int maxValue: 10
 
     onMaxValueChanged: {
+        if (values.length > 0)
+            return
+
         if (model.count === 0) {
             createModel()
             return
@@ -90,6 +96,9 @@ Item {
     }
 
     function createModel() {
+        if (values.length > 0)
+            return
+
         for (var i = minValue; i <= maxValue; i++) {
             model.append({modelData: i})
         }
@@ -97,6 +106,8 @@ Item {
 
     ListModel {
         id: model
+
+        dynamicRoles: true
     }
 
     PathView {
