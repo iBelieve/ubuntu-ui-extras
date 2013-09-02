@@ -37,12 +37,13 @@ UbuntuShape {
         date.setHours(0)
         date.setMinutes(0)
         date.setSeconds(0)
-        print("Date:", dateSpinner.value)
-        date.setDate(dateSpinner.value)
-        print("Month:", monthSpinner.selectedIndex)
-        date.setMonth(monthSpinner.selectedIndex)
+
         print("Year", yearSpinner.value)
         date.setFullYear(yearSpinner.value)
+        print("Month:", monthSpinner.selectedIndex)
+        date.setMonth(monthSpinner.selectedIndex)
+        print("Date:", dateSpinner.value)
+        date.setDate(dateSpinner.value)
         return date
     }
 
@@ -57,7 +58,7 @@ UbuntuShape {
             //top: header.bottom
         }
 
-        Spinner {
+        ValuesSpinner {
             id: monthSpinner
             anchors {
                 left: parent.left

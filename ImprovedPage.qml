@@ -24,42 +24,26 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1
 
-Tab {
-    id: root
+Page {
+    id: page
 
     property bool show: true
 
     onShowChanged: {
-        parent.tabList = customUpdateTabList(parent)
+        print(title, "show =", show)
+        if (first)
+            pageStack.push(page)
     }
 
-    Connections {
-        target: root.parent
-        onChildrenChanged: {
-            parent.tabList = customUpdateTabList(parent)
-        }
-    }
+    property bool first: false
 
-    function customUpdateTabList(tabsModel) {
-        var list = [];
-        for (var i=0; i < tabsModel.children.length; i++) {
-            if (isTab(tabsModel.children[i])) list.push(tabsModel.children[i]);
-        }
-        return list
-    }
+    onFirstChanged: {
+        print(title, "first =", first)
+        if (first) {
 
-    Component.onCompleted: {
-        parent.tabList = customUpdateTabList(parent)
-    }
-
-    function isTab(item) {
-        if (item && item.hasOwnProperty("__isPageTreeNode")
-                && item.__isPageTreeNode && item.hasOwnProperty("title")
-                && item.hasOwnProperty("page")
-                && (item.hasOwnProperty("show") ? item.show : true)) {
-            return true;
         } else {
-            return false;
+            if (!show)
+                pageStack.push(page)
         }
     }
 }

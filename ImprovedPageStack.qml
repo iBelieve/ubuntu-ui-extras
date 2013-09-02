@@ -24,42 +24,50 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1
 
-Tab {
-    id: root
+PageStack {
+    id: pageStack
 
-    property bool show: true
-
-    onShowChanged: {
-        parent.tabList = customUpdateTabList(parent)
+    function internalPush(page, properties) {
+        PageStack.push(pageStack, page, properties)
+//        if (internal.stack.size() > 0) internal.stack.top().active = false;
+//        __
+//        internal.stack.push(internal.createWrapper(page, properties));
+//        internal.stack.top().active = true;
+//        internal.stackUpdated();
     }
 
-    Connections {
-        target: root.parent
-        onChildrenChanged: {
-            parent.tabList = customUpdateTabList(parent)
+    function internalPop() {
+        if (internal.stack.size() < 1) {
+            print("WARNING: Trying to pop an empty PageStack. Ignoring.");
+            return;
         }
+        internal.stack.top().active = false;
+        if (internal.stack.top().canDestroy) internal.stack.top().destroyObject();
+        internal.stack.pop();
+        internal.stackUpdated();
+
+        if (internal.stack.size() > 0) internal.stack.top().active = true;
     }
 
-    function customUpdateTabList(tabsModel) {
-        var list = [];
-        for (var i=0; i < tabsModel.children.length; i++) {
-            if (isTab(tabsModel.children[i])) list.push(tabsModel.children[i]);
+    function pop() {
+        currentPage.first = false
+        internalPop()
+
+        while (!currentPage.show) {
+            internalPop()
+            currentPage.first = false
+            internalPop()
         }
-        return list
+
+        currentPage.first = true
     }
 
-    Component.onCompleted: {
-        parent.tabList = customUpdateTabList(parent)
-    }
+    function push(page) {
+        if (currentPage != null)
+            currentPage.first = false
+        page.first = true
 
-    function isTab(item) {
-        if (item && item.hasOwnProperty("__isPageTreeNode")
-                && item.__isPageTreeNode && item.hasOwnProperty("title")
-                && item.hasOwnProperty("page")
-                && (item.hasOwnProperty("show") ? item.show : true)) {
-            return true;
-        } else {
-            return false;
-        }
+        if (page.show)
+            internalPush(page)
     }
 }

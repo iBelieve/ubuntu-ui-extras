@@ -93,6 +93,4 @@ Rectangle {
         color: Theme.palette.normal.baseText
         fontSize: "large"
     }
-
-    onStateChanged: print(state)
 }

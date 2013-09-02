@@ -42,29 +42,14 @@ Item {
 
     property var value: model.get(listView.currentIndex).modelData
 
-    property var values: []
-
-    onValuesChanged: {
-        model.clear()
-        for (var i = 0; i < values.length; i++) {
-            model.append({modelData: values[i]})
-        }
-    }
-
     Component.onCompleted: {
         createModel()
-        for (var i = 0; i < model.count; i++) {
-            if (model.get(i).modelData === value)
-                listView.currentIndex = i
-        }
+        listView.currentIndex = value - minValue
     }
 
     property int minValue: 0
 
     onMinValueChanged: {
-        if (values.length > 0)
-            return
-
         if (model.count === 0) {
             createModel()
             return
@@ -81,9 +66,6 @@ Item {
     property int maxValue: 10
 
     onMaxValueChanged: {
-        if (values.length > 0)
-            return
-
         if (model.count === 0) {
             createModel()
             return
@@ -96,9 +78,6 @@ Item {
     }
 
     function createModel() {
-        if (values.length > 0)
-            return
-
         for (var i = minValue; i <= maxValue; i++) {
             model.append({modelData: i})
         }

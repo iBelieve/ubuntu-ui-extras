@@ -24,42 +24,72 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1
 
-Tab {
+Item {
     id: root
 
-    property bool show: true
+    clip: true
+    //color: "white"
+    //color: Qt.rgba(0.2,0.2,0.2,0.4)
 
-    onShowChanged: {
-        parent.tabList = customUpdateTabList(parent)
+    width: units.gu(10)
+    height: units.gu(30)
+
+    property alias selectedIndex: listView.currentIndex
+
+    onSelectedIndexChanged: {
+        value = values[selectedIndex]
     }
 
-    Connections {
-        target: root.parent
-        onChildrenChanged: {
-            parent.tabList = customUpdateTabList(parent)
+    property var value: model.get(listView.currentIndex).modelData
+
+    property var values: []
+
+    Component.onCompleted: selectedIndex = values.indexOf(value)
+
+    PathView {
+        id: listView
+        anchors.fill: parent
+        model: values
+
+        delegate: Standard {
+            highlightWhenPressed: false
+            Label {
+                anchors.centerIn: parent
+                text: modelData
+            }
+            onClicked: listView.currentIndex = index
+            showDivider: false
+        }
+
+        pathItemCount: listView.height / highlightItem.height + 1
+        preferredHighlightBegin: 0.5
+        preferredHighlightEnd: 0.5
+        clip: true
+
+        property int contentHeight: pathItemCount * highlightItem.height
+
+        path: Path {
+            startX: listView.width / 2; startY: -(listView.contentHeight - listView.height) / 2
+            PathLine { x: listView.width / 2; y: listView.height + (listView.contentHeight - listView.height) / 2 }
+        }
+
+        maximumFlickVelocity: 400
+
+        highlight: Rectangle {
+            width: parent.width
+            height: units.gu(6)
+            property color baseColor: "#dd4814"
+            gradient: Gradient {
+                GradientStop {
+                    position: 0.00;
+                    color: Qt.lighter(baseColor, 1.3);
+                }
+                GradientStop {
+                    position: 1.0;
+                    color: baseColor;
+                }
+            }
         }
     }
 
-    function customUpdateTabList(tabsModel) {
-        var list = [];
-        for (var i=0; i < tabsModel.children.length; i++) {
-            if (isTab(tabsModel.children[i])) list.push(tabsModel.children[i]);
-        }
-        return list
-    }
-
-    Component.onCompleted: {
-        parent.tabList = customUpdateTabList(parent)
-    }
-
-    function isTab(item) {
-        if (item && item.hasOwnProperty("__isPageTreeNode")
-                && item.__isPageTreeNode && item.hasOwnProperty("title")
-                && item.hasOwnProperty("page")
-                && (item.hasOwnProperty("show") ? item.show : true)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }
