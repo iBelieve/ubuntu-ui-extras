@@ -34,6 +34,7 @@ Rectangle {
     anchors.fill: parent
     //color: Theme.palette.normal.base;
     color: Qt.rgba(0.2,0.2,0.2,0.3)
+    property color fontColor: Theme.palette.normal.baseText//Theme.palette.selected.backgroundText
 
     Image {
         id: leftSwipeDeleteIcon
@@ -53,6 +54,7 @@ Rectangle {
         id: leftSwipeBackgroundText
         visible: swipeBackgroundItem.state === "SwipingRight"
         text: swipeBackgroundItem.text
+        color: fontColor
 
         anchors {
             verticalCenter: parent.verticalCenter
@@ -60,7 +62,6 @@ Rectangle {
             rightMargin: units.gu(2)
         }
 
-        color: Theme.palette.normal.baseText
         fontSize: "large"
     }
 
@@ -83,6 +84,7 @@ Rectangle {
         id: rightSwipeBackgroundText
         visible: swipeBackgroundItem.state === "SwipingLeft"
         text: swipeBackgroundItem.text
+        color: fontColor
 
         anchors {
             verticalCenter: parent.verticalCenter
@@ -90,7 +92,6 @@ Rectangle {
             leftMargin: units.gu(2)
         }
 
-        color: Theme.palette.normal.baseText
         fontSize: "large"
     }
 }
