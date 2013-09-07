@@ -24,74 +24,19 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1
 
-// Widget based on code from Clock app
-Rectangle {
-    id: swipeBackgroundItem
+Standard {
+    property alias text: label.text
 
-    property string iconSource
-    property string text
-
-    anchors.fill: parent
-    //color: Theme.palette.normal.base;
-    color: Qt.rgba(0.2,0.2,0.2,0.3)
-    property color fontColor: Theme.palette.normal.baseText//Theme.palette.selected.backgroundText
-
-    Image {
-        id: leftSwipeDeleteIcon
-
-        anchors {
-            top: leftSwipeBackgroundText.top
-            right: leftSwipeBackgroundText.left
-            rightMargin: units.gu(1)
-            bottom: leftSwipeBackgroundText.bottom
-        }
-        source: swipeBackgroundItem.iconSource
-        width: height
-        visible: swipeBackgroundItem.state === "SwipingRight"
-    }
-
+    //FIXME: Hack because of Suru theme!
     Label {
-        id: leftSwipeBackgroundText
-        visible: swipeBackgroundItem.state === "SwipingRight"
-        text: swipeBackgroundItem.text
-        color: fontColor
-
-        anchors {
-            verticalCenter: parent.verticalCenter
-            right: parent.right
-            rightMargin: units.gu(2)
-        }
-
-        fontSize: "large"
-    }
-
-
-    Image {
-        id: rightSwipeDeleteIcon
-        source: swipeBackgroundItem.iconSource
-
-        anchors {
-            top: rightSwipeBackgroundText.top
-            left: rightSwipeBackgroundText.right
-            leftMargin: units.gu(1)
-            bottom: rightSwipeBackgroundText.bottom
-        }
-        width: height
-        visible: swipeBackgroundItem.state === "SwipingLeft"
-    }
-
-    Label {
-        id: rightSwipeBackgroundText
-        visible: swipeBackgroundItem.state === "SwipingLeft"
-        text: swipeBackgroundItem.text
-        color: fontColor
-
+        id: label
         anchors {
             verticalCenter: parent.verticalCenter
             left: parent.left
-            leftMargin: units.gu(2)
+            margins: units.gu(2)
         }
 
-        fontSize: "large"
+        fontSize: "medium"
+        color: Theme.palette.normal.overlayText
     }
 }
