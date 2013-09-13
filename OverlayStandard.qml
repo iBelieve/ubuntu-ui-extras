@@ -25,6 +25,8 @@ import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1
 
 Standard {
+    id: standard
+
     property alias text: label.text
 
     //FIXME: Hack because of Suru theme!
@@ -33,10 +35,10 @@ Standard {
         anchors {
             verticalCenter: parent.verticalCenter
             left: parent.left
-            margins: units.gu(2)
+            leftMargin: standard.icon == undefined ? units.gu(2) : Math.min(units.gu(5), parent.height - units.gu(1)) + units.gu(4)
         }
 
         fontSize: "medium"
-        color: Theme.palette.normal.overlayText
+        color: standard.selected ? UbuntuColors.orange : Theme.palette.normal.overlayText
     }
 }
