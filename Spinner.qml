@@ -55,7 +55,7 @@ Item {
             return
         }
         while (minValue < model.get(0).modelData)
-            model.insert({modelData: model.get(0) - 1}, 0)
+            model.insert({modelData: model.get(0).modelData - 1}, 0)
         while (minValue > model.get(0).modelData)
             model.remove(0)
 
@@ -71,9 +71,9 @@ Item {
             return
         }
         while (maxValue < model.get(model.count - 1).modelData)
-            model.insert({modelData: model.get(model.count - 1) + 1}, model.count - 1)
-        while (maxValue > model.get(model.count - 1).modelData)
             model.remove(model.count - 1)
+        while (maxValue > model.get(model.count - 1).modelData)
+            model.append({modelData: model.get(model.count - 1).modelData + 1})
         print("Model length", model.count)
     }
 

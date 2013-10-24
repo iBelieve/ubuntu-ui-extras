@@ -88,13 +88,19 @@ Action {
     /*!
       Store the value in the document.
       */
-    onValueChanged: {
+    // FIXME: Running this as onValue freezes the UI for a moment
+    Component.onDestruction: {
+        saveValue()
+    }
+
+    function saveValue() {
         if (__doc) {
             var ct = __doc.contents
             ct[name] = value
             __doc.contents = ct
         }
     }
+
     /*!
       \internal
       The document to propagate changes to.

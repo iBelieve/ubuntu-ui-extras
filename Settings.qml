@@ -98,13 +98,23 @@ Item {
         id: __doc
         docId: group
         create: false
+        /*
+         * FIXME: The problem with this is that by default, the
+         * contents are updated every time an option changes.
+         * This causes this signal handler to be called whenever
+         * a property is changed, and thus causes every option
+         * to be reloaded, possibily with side-effects in the
+         * app's code
+         */
         onContentsChanged: {
             if (!__doc.contents)
                 return
             for(var item in resources) {
                 var child = resources[item]
+                // FIXME: Added the check for hasOwnProperty so the default value
+                // is retained if no value is saved
                 if (child.hasOwnProperty("name")
-                 && child.hasOwnProperty("defaultValue")) {
+                 && child.hasOwnProperty("defaultValue") && __doc.contents.hasOwnProperty(child.name)) {
                     child.value = __doc.contents[child.name]
                 }
             }
