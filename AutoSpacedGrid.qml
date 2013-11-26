@@ -45,6 +45,13 @@ Item {
 
     onWidthChanged: layout()
 
+    // FIXME: A really uggly hack to get the layout right
+    Timer {
+        interval: 1
+        running: true
+        onTriggered: layout()
+    }
+
     function layout() {
         var count = 1
         var space = calcSpacing(count)
