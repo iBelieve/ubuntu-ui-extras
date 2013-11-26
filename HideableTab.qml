@@ -30,36 +30,44 @@ Tab {
     property bool show: true
 
     onShowChanged: {
-        parent.tabList = customUpdateTabList(parent)
-    }
-
-    Connections {
-        target: root.parent
-        onChildrenChanged: {
-            parent.tabList = customUpdateTabList(parent)
-        }
-    }
-
-    function customUpdateTabList(tabsModel) {
-        var list = [];
-        for (var i=0; i < tabsModel.children.length; i++) {
-            if (isTab(tabsModel.children[i])) list.push(tabsModel.children[i]);
-        }
-        return list
-    }
-
-    Component.onCompleted: {
-        parent.tabList = customUpdateTabList(parent)
-    }
-
-    function isTab(item) {
-        if (item && item.hasOwnProperty("__isPageTreeNode")
-                && item.__isPageTreeNode && item.hasOwnProperty("title")
-                && item.hasOwnProperty("page")
-                && (item.hasOwnProperty("show") ? item.show : true)) {
-            return true;
+        if (show) {
+            parent.parent.insertTab(root.index, undefined, root)
         } else {
-            return false;
+            parent.parent.removeTab(root.index)
         }
     }
+
+//    onShowChanged: {
+//        parent.tabList = customUpdateTabList(parent)
+//    }
+
+//    Connections {
+//        target: root.parent
+//        onChildrenChanged: {
+//            parent.tabList = customUpdateTabList(parent)
+//        }
+//    }
+
+//    function customUpdateTabList(tabsModel) {
+//        var list = [];
+//        for (var i=0; i < tabsModel.children.length; i++) {
+//            if (isTab(tabsModel.children[i])) list.push(tabsModel.children[i]);
+//        }
+//        return list
+//    }
+
+//    Component.onCompleted: {
+//        parent.tabList = customUpdateTabList(parent)
+//    }
+
+//    function isTab(item) {
+//        if (item && item.hasOwnProperty("__isPageTreeNode")
+//                && item.__isPageTreeNode && item.hasOwnProperty("title")
+//                && item.hasOwnProperty("page")
+//                && (item.hasOwnProperty("show") ? item.show : true)) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 }
