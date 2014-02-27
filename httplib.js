@@ -21,12 +21,12 @@
  ***************************************************************************/
 .pragma library
 
-function post(path, options, callback, args) {
-    request(path, "POST", options, callback, args)
+function post(path, options, callback, args, body) {
+    return request(path, "POST", options, callback, args, body)
 }
 
 function put(path, options, callback, args) {
-    request(path, "PUT", options, callback, args)
+    return request(path, "PUT", options, callback, args)
 }
 
 //function delete(path, options, callback, args) {
@@ -34,29 +34,34 @@ function put(path, options, callback, args) {
 //}
 
 function get(path, options, callback, args) {
-    request(path, "GET", options, callback, args)
+    return request(path, "GET", options, callback, args)
 }
 
-function request(path, call, options, callback, args) {
+function request(path, call, options, callback, args, body) {
     var address = path
 
     if (options === undefined)
         options = []
 
     if (options.length > 0)
-        address += "&" + options.join("&").replace(" ", "+")
+        address += "?" + options.join("&").replace(" ", "+")
 
-    if (call === "PUT")
-        print(call, address)
+    print(call, address)
 
     var doc = new XMLHttpRequest();
     doc.onreadystatechange = function() {
         if (doc.readyState === XMLHttpRequest.DONE) {
+            print(doc.getResponseHeader("X-RateLimit-Remaining"))
             if (callback !== undefined)
                 callback(doc.responseText, args)
         }
      }
 
     doc.open(call, address);
-    doc.send();
+    if (body)
+        doc.send(body)
+    else
+        doc.send();
+
+    return doc
 }

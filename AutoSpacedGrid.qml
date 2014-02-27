@@ -67,6 +67,7 @@ Item {
         }
 
         xCount = count
+        print("Spacing is", spacing, xCount)
     }
 
     function calcSpacing(count) {
@@ -77,7 +78,8 @@ Item {
 
     property real spacing
     property int minSpacing: units.gu(2)
-    property int outerSpacing: 1/2 * spacing
+    property real outerSpacing: 1/2 * spacing
+    property real outerYSpacing: 1/2 * ySpacing
     property real ySpacing: spacing
 
     default property alias children: grid.children
@@ -86,7 +88,10 @@ Item {
         id: grid
         anchors {
             fill: parent
-            margins: root.outerSpacing
+            leftMargin: root.outerSpacing
+            rightMargin: root.outerSpacing
+            topMargin: root.outerYSpacing
+            bottomMargin: root.outerYSpacing
         }
 
         columns: xCount

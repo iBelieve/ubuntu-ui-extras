@@ -46,7 +46,7 @@ Object {
     signal childChanged(var doc)
 
     onChildChanged: {
-        print("Child changed:", doc.docId)
+        //print("Child changed:", doc.docId)
         if (parent) {
             parent.childrenData[document.docId] = save()
             parent.childChanged(document)
@@ -61,10 +61,10 @@ Object {
     property var childDocs: []
 
     onLoadedChanged: {
-        print("Parent is loaded: ", name)
+        //print("Parent is loaded: ", name)
         if (loaded && childDocs) {
             for (var i = 0; i < childDocs.length; i++) {
-                print("A child exists, loading that:", i)
+                //print("A child exists, loading that:", i)
                 childDocs[i].loadFromParent()
             }
         }
@@ -82,7 +82,7 @@ Object {
     function loadFromParent() {
         if (loading)
             return
-        print(name)
+        //print(name)
 
         if (parent && (!parent.childDocs || parent.childDocs.indexOf(document) === -1)) {
             if (!parent.childDocs)
@@ -91,19 +91,19 @@ Object {
         }
 
         if (parent && parent.loaded && docId !== -1 && data) {
-            print("Loading " + name + " (" + docId + ") from parent...")
-            print(JSON.stringify(parent.children))
-            print(JSON.stringify(parent.childrenData))
-            print(parent.children.indexOf(docId))
+            //print("Loading " + name + " (" + docId + ") from parent...")
+            //print(JSON.stringify(parent.children))
+            //print(JSON.stringify(parent.childrenData))
+            //print(parent.children.indexOf(docId))
             if (parent.children.indexOf(docId) !== -1) {
                 if (parent.childrenData && parent.childrenData.hasOwnProperty(docId)) {
-                    print(name + " exists, loading")
+                    //print(name + " exists, loading")
                     load(parent.childrenData[docId])
                 } else {
-                    print("ERROR")
+                    //print("ERROR")
                 }
             } else {
-                print(name + " is a new document")
+                //print(name + " is a new document")
                 if (!parent.childrenData)
                     parent.childrenData = []
 
@@ -124,7 +124,8 @@ Object {
 
     function set(name, value) {
         data[name] = value
-        if (parent) {
+        data = data
+        if (parent && parent.childrenData) {
             parent.childrenData[document.docId] = save()
             parent.childChanged(document)
         }
@@ -136,7 +137,7 @@ Object {
     }
 
     function newDoc(json) {
-        print("Adding a new doc", JSON.stringify(json))
+        //print("Adding a new doc", JSON.stringify(json))
         var docId = nextDocId
         nextDocId++
         childrenData[docId] = json
@@ -149,7 +150,7 @@ Object {
     }
 
     function load(json) {
-        print("Loading...")
+        //print("Loading...")
         loading = true
         var list = data
         for (var prop in json) {
@@ -161,10 +162,10 @@ Object {
 
         if (json && json.hasOwnProperty("children")) {
             childrenData = json.children
-            print("Children data: ", JSON.stringify(childrenData))
+            //print("Children data: ", JSON.stringify(childrenData))
             children = []
             for (var i = 0; i < childrenData.length; i++) {
-                print("Checking childrenData", i, childrenData[i])
+                //print("Checking childrenData", i, childrenData[i])
                 if (childrenData[i] !== null)
                     children.push(i)
             }
@@ -181,7 +182,7 @@ Object {
         var json = JSON.parse(JSON.stringify(data))
         json.nextDocId = nextDocId
         json.children = JSON.parse(JSON.stringify(childrenData))
-        print("Saving: " + JSON.stringify(json))
+        //print("Saving: " + JSON.stringify(json))
         return json
     }
 }

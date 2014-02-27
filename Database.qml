@@ -42,6 +42,8 @@ Object {
         name: "database"
     }
 
+    signal loaded()
+
     U1db.Document {
         id: storage
 
@@ -53,7 +55,7 @@ Object {
 
         onContentsChanged: {
             if (!loaded) {
-                print(JSON.stringify(storage.contents))
+                //print(JSON.stringify(storage.contents))
                 if (contents && contents.hasOwnProperty("contents")) {
                     doc.load(contents["contents"])
                 } else {
@@ -61,6 +63,7 @@ Object {
                 }
 
                 loaded = true
+                root.loaded()
             }
         }
 
@@ -68,7 +71,7 @@ Object {
             var json = {}
             //json = storage.contents
             json["contents"] = doc.save()
-            print(JSON.stringify(json))
+            //print(JSON.stringify(json))
             storage.contents = json
         }
     }
