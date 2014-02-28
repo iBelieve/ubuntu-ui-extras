@@ -49,15 +49,25 @@ function request(path, call, options, callback, args, body) {
     print(call, address)
 
     var doc = new XMLHttpRequest();
+    doc.timeout = 4000;
     doc.onreadystatechange = function() {
         if (doc.readyState === XMLHttpRequest.DONE) {
             print(doc.getResponseHeader("X-RateLimit-Remaining"))
-            if (callback !== undefined)
-                callback(doc.responseText, args)
+            print(doc.responseText)
+            print("Status:",doc.status)
+            if (callback !== undefined) {
+                if (doc.status == 200)
+                    callback(doc.responseText, doc.statusargs)
+                else
+                    callback(-1, doc.status, args)
+            }
         }
      }
+    doc.ontimeout = function () {
+        callback(-1, 0, args)
+    }
 
-    doc.open(call, address);
+    doc.open(call, address, true);
     if (body)
         doc.send(body)
     else
