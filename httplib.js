@@ -21,23 +21,27 @@
  ***************************************************************************/
 .pragma library
 
-function post(path, options, callback, args, body) {
-    return request(path, "POST", options, callback, args, body)
+function post(path, options, callback, args, headers, body) {
+    return request(path, "POST", options, callback, args, headers, body)
 }
 
-function put(path, options, callback, args) {
-    return request(path, "PUT", options, callback, args)
+function patch(path, options, callback, args, headers, body) {
+    return request(path, "POST", options, callback, args, headers, body)
+}
+
+function put(path, options, callback, args, headers) {
+    return request(path, "PUT", options, callback, args, headers)
 }
 
 //function delete(path, options, callback, args) {
 //    request(path, "DELETE", options, callback, args)
 //}
 
-function get(path, options, callback, args) {
-    return request(path, "GET", options, callback, args)
+function get(path, options, callback, args, headers) {
+    return request(path, "GET", options, callback, args, headers)
 }
 
-function request(path, call, options, callback, args, body) {
+function request(path, call, options, callback, args, headers, body) {
     var address = path
 
     if (options === undefined)
@@ -47,13 +51,15 @@ function request(path, call, options, callback, args, body) {
         address += "?" + options.join("&").replace(" ", "+")
 
     print(call, address)
+    print("Headers", JSON.stringify(headers))
 
     var doc = new XMLHttpRequest();
-    doc.timeout = 4000;
+    doc.timeout = 10000;
     doc.onreadystatechange = function() {
         if (doc.readyState === XMLHttpRequest.DONE) {
             print(doc.getResponseHeader("X-RateLimit-Remaining"))
-            print(doc.responseText)
+            print(doc.getResponseHeader("X-GitHub-Media-Type"))
+            //print(doc.responseText)
             print("Status:",doc.status)
             if (callback !== undefined) {
                 if (doc.status == 200)
@@ -68,6 +74,10 @@ function request(path, call, options, callback, args, body) {
     }
 
     doc.open(call, address, true);
+    for (var key in headers) {
+        print(key + ": " + headers[key])
+        doc.setRequestHeader(key, headers[key])
+    }
     if (body)
         doc.send(body)
     else

@@ -40,9 +40,23 @@ Object {
     Document {
         id: doc
         name: "database"
+
+        onChildChanged: storage.dbChanged = true
     }
 
     signal loaded()
+
+    Timer {
+        interval: 5000
+        repeat: true
+        running: true
+        onTriggered: {
+            if (storage.dbChanged) {
+                storage.save()
+                storage.dbChanged = false
+            }
+        }
+    }
 
     U1db.Document {
         id: storage
@@ -52,6 +66,7 @@ Object {
         create: true
 
         property bool loaded
+        property bool dbChanged
 
         onContentsChanged: {
             if (!loaded) {
@@ -67,7 +82,9 @@ Object {
             }
         }
 
-        Component.onDestruction: {
+        Component.onDestruction: save()
+
+        function save() {
             var json = {}
             //json = storage.contents
             json["contents"] = doc.save()
