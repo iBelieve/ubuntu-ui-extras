@@ -37,7 +37,7 @@ Object {
 
     property Object parent
     property var children: []
-    property var childrenData: []
+    property var childrenData: { return {} }
     property int count: children.length
     property bool loaded: false
 
@@ -47,8 +47,8 @@ Object {
 
     onChildChanged: {
         //print("Child changed:", doc.docId)
-        if (parent) {
-            parent.childrenData[document.docId] = save()
+        if (parent && parent.hasOwnProperty("childrenData")) {
+            parent.childrenData[String(document.docId)] = save()
             parent.childChanged(document)
         }
 
@@ -98,7 +98,7 @@ Object {
             if (parent.children.indexOf(docId) !== -1) {
                 if (parent.childrenData && parent.childrenData.hasOwnProperty(docId)) {
                     //print(name + " exists, loading")
-                    load(parent.childrenData[docId])
+                    load(parent.childrenData[String(docId)])
                 } else {
                     //print("ERROR")
                 }
@@ -107,7 +107,7 @@ Object {
                 if (!parent.childrenData)
                     parent.childrenData = []
 
-                parent.childrenData[docId] = save()
+                parent.childrenData[String(docId)] = save()
                 parent.children.push(docId)
                 parent.nextDocId = docId + 1
 
@@ -118,7 +118,7 @@ Object {
         }
     }
 
-    function get(name, def) {
+    function  get(name, def) {
         return data.hasOwnProperty(name) ? data[name] : def
     }
 
@@ -126,7 +126,7 @@ Object {
         data[name] = value
         data = data
         if (parent && parent.childrenData) {
-            parent.childrenData[document.docId] = save()
+            parent.childrenData[String(document.docId)] = save()
             parent.childChanged(document)
         }
     }
@@ -140,13 +140,15 @@ Object {
         //print("Adding a new doc", JSON.stringify(json))
         var docId = nextDocId
         nextDocId++
-        childrenData[docId] = json
+        childrenData[String(docId)] = json
         children.push(docId)
         children = children
         if (parent) {
-            parent.childrenData[document.docId] = save()
+            parent.childrenData[String(document.docId)] = save()
             parent.childChanged(document)
         }
+
+        return docId
     }
 
     function load(json) {
@@ -176,6 +178,25 @@ Object {
 
         loaded = true
         loading = false
+    }
+
+    function remove() {
+        var oldDocId = docId
+        docId = -1
+        if (parent)
+            parent.removeDoc(oldDocId)
+    }
+
+    function removeDoc(docId) {
+        delete childrenData[String(docId)]
+        childrenData = childrenData
+        print(JSON.stringify(childrenData))
+        children.splice(children.indexOf(docId), 1)
+        children = children
+        if (parent) {
+            parent.childrenData[String(document.docId)] = save()
+            parent.childChanged(document)
+        }
     }
 
     function save() {
