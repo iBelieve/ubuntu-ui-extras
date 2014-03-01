@@ -166,10 +166,9 @@ Object {
             childrenData = json.children
             //print("Children data: ", JSON.stringify(childrenData))
             children = []
-            for (var i = 0; i < childrenData.length; i++) {
+            for (var docId in childrenData) {
                 //print("Checking childrenData", i, childrenData[i])
-                if (childrenData[i] !== null)
-                    children.push(i)
+                children.push(Number(docId))
             }
             children = children
         }

@@ -62,15 +62,15 @@ function request(path, call, options, callback, args, headers, body) {
             //print(doc.responseText)
             print("Status:",doc.status)
             if (callback !== undefined) {
-                if (doc.status == 200)
-                    callback(doc.responseText, doc.statusargs)
+                if (doc.status == 200 || doc.status == 201 || doc.status == 202)
+                    callback(false, doc.status, doc.responseText, args)
                 else
-                    callback(-1, doc.status, args)
+                    callback(true, doc.status, doc.responseText, args)
             }
         }
      }
     doc.ontimeout = function () {
-        callback(-1, 0, args)
+        callback(true, 0, "", args)
     }
 
     doc.open(call, address, true);

@@ -88,7 +88,7 @@ Object {
             var json = {}
             //json = storage.contents
             json["contents"] = doc.save()
-            //print(JSON.stringify(json))
+            print(JSON.stringify(json))
             storage.contents = json
         }
     }
