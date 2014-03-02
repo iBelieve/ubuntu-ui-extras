@@ -83,9 +83,10 @@ Item {
             columnHeights[newColumn] += repeater.itemAt(i).height
         }
 
-        contentHeight = 0
+        var cHeight = 0
         for (i = 0; i < columns; i++)
-            contentHeight = Math.max(contentHeight, columnHeights[i])
+            cHeight = Math.max(cHeight, columnHeights[i])
+        contentHeight = cHeight
     }
 
 
