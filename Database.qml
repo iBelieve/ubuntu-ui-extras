@@ -39,7 +39,7 @@ Object {
 
     Document {
         id: doc
-        name: "database"
+        docId: ""
 
         onChildChanged: storage.dbChanged = true
     }

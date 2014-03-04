@@ -31,9 +31,7 @@ import U1db 1.0 as U1db
 Object {
     id: document
 
-    property int docId: -1
-    property int nextDocId: 0
-    property string name: ""
+    property string docId: ""
 
     property Object parent
     property var children: []
@@ -46,9 +44,11 @@ Object {
     signal childChanged(var doc)
 
     onChildChanged: {
-        //print("Child changed:", doc.docId)
+        //print("Child changed:", doc.docId, parent)
+        //print("Data is", JSON.stringify(save()))
         if (parent && parent.hasOwnProperty("childrenData")) {
-            parent.childrenData[String(document.docId)] = save()
+            //print("Saving to parent")
+            parent.childrenData[document.docId] = save()
             parent.childChanged(document)
         }
 
@@ -77,12 +77,14 @@ Object {
         loadFromParent()
     }
 
+    Component.onCompleted: loadFromParent()
+
     property bool loading
 
     function loadFromParent() {
         if (loading)
             return
-        //print(name)
+        //print("Attempting to load from parent:", docId)
 
         if (parent && (!parent.childDocs || parent.childDocs.indexOf(document) === -1)) {
             if (!parent.childDocs)
@@ -90,26 +92,27 @@ Object {
             parent.childDocs.push(document)
         }
 
-        if (parent && parent.loaded && docId !== -1 && data) {
-            //print("Loading " + name + " (" + docId + ") from parent...")
+        if (parent && parent.loaded && docId !== "" && data) {
+            //print("Loading " + docId + " from parent...")
             //print(JSON.stringify(parent.children))
             //print(JSON.stringify(parent.childrenData))
             //print(parent.children.indexOf(docId))
             if (parent.children.indexOf(docId) !== -1) {
                 if (parent.childrenData && parent.childrenData.hasOwnProperty(docId)) {
                     //print(name + " exists, loading")
-                    load(parent.childrenData[String(docId)])
+                    load(parent.childrenData[docId])
                 } else {
                     //print("ERROR")
                 }
             } else {
-                //print(name + " is a new document")
+                //print(docId + " is a new document")
                 if (!parent.childrenData)
-                    parent.childrenData = []
+                    parent.childrenData = {}
 
-                parent.childrenData[String(docId)] = save()
+                //print("Parent before adding:",JSON.stringify(parent.childrenData))
+                parent.childrenData[docId] = save()
                 parent.children.push(docId)
-                parent.nextDocId = docId + 1
+                //print("Parent after adding:",JSON.stringify(parent.childrenData))
 
                 parent.childChanged(document)
 
@@ -126,7 +129,7 @@ Object {
         data[name] = value
         data = data
         if (parent && parent.childrenData) {
-            parent.childrenData[String(document.docId)] = save()
+            parent.childrenData[document.docId] = save()
             parent.childChanged(document)
         }
     }
@@ -136,19 +139,15 @@ Object {
         return Qt.binding(function() { return get(name) })
     }
 
-    function newDoc(json) {
+    function newDoc(docId, json) {
         //print("Adding a new doc", JSON.stringify(json))
-        var docId = nextDocId
-        nextDocId++
-        childrenData[String(docId)] = json
+        childrenData[docId] = json
         children.push(docId)
         children = children
         if (parent) {
-            parent.childrenData[String(document.docId)] = save()
+            parent.childrenData[document.docId] = save()
             parent.childChanged(document)
         }
-
-        return docId
     }
 
     function load(json) {
@@ -159,8 +158,6 @@ Object {
             if (prop !== "children" && prop !== "nextDocId")
                 list[prop] = json[prop]
         }
-        if (json.hasOwnProperty("nextDocId"))
-            nextDocId = json["nextDocId"]
 
         if (json && json.hasOwnProperty("children")) {
             childrenData = json.children
@@ -168,7 +165,7 @@ Object {
             children = []
             for (var docId in childrenData) {
                 //print("Checking childrenData", i, childrenData[i])
-                children.push(Number(docId))
+                children.push(docId)
             }
             children = children
         }
@@ -181,26 +178,25 @@ Object {
 
     function remove() {
         var oldDocId = docId
-        docId = -1
+        docId = ""
         if (parent)
             parent.removeDoc(oldDocId)
     }
 
     function removeDoc(docId) {
-        delete childrenData[String(docId)]
+        delete childrenData[docId]
         childrenData = childrenData
-        print(JSON.stringify(childrenData))
+        //print(JSON.stringify(childrenData))
         children.splice(children.indexOf(docId), 1)
         children = children
         if (parent) {
-            parent.childrenData[String(document.docId)] = save()
+            parent.childrenData[document.docId] = save()
             parent.childChanged(document)
         }
     }
 
     function save() {
         var json = JSON.parse(JSON.stringify(data))
-        json.nextDocId = nextDocId
         json.children = JSON.parse(JSON.stringify(childrenData))
         //print("Saving: " + JSON.stringify(json))
         return json
