@@ -20,6 +20,19 @@ function filteredCount(model, func, name) {
     return filter(model, func, name).length
 }
 
+function iter(list, func) {
+    var value = 0
+
+    for (var i = 0; i < length(list); i++) {
+        var item = getItem(list, i)
+        var ans = func(item)
+        print(ans)
+        value += ans
+    }
+
+    return value
+}
+
 function filteredSum(list, prop, func, name) {
     var value = 0
 

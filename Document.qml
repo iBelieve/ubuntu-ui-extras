@@ -125,7 +125,22 @@ Object {
         return data.hasOwnProperty(name) ? data[name] : def
     }
 
+    function  getOrInit(name, def) {
+        if (loaded) {
+            if (data.hasOwnProperty(name)) {
+                return data[name]
+            } else {
+                set(name, def)
+                return def
+            }
+        } else {
+            return data.hasOwnProperty(name) ? data[name] : def
+        }
+    }
+
     function set(name, value) {
+        if (data == undefined)
+            date = {}
         data[name] = value
         data = data
         if (parent && parent.childrenData) {
@@ -155,7 +170,7 @@ Object {
         loading = true
         var list = data
         for (var prop in json) {
-            if (prop !== "children" && prop !== "nextDocId")
+            if (prop !== "children")
                 list[prop] = json[prop]
         }
 

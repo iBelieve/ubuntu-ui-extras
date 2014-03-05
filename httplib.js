@@ -48,7 +48,7 @@ function request(path, call, options, callback, args, headers, body) {
         options = []
 
     if (options.length > 0)
-        address += "?" + options.join("&").replace(" ", "+")
+        address += "?" + options.join("&").replace(/ /g, "%20")
 
     print(call, address)
     print("Headers", JSON.stringify(headers))

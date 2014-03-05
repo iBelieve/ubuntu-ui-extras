@@ -46,38 +46,42 @@ Dialog {
         }
     }
 
-    Button {
-        id: okButton
-        objectName: "okButton"
-
-        text: i18n.tr("Ok")
-        enabled: textField.acceptableInput
-
-        onClicked: {
-            PopupUtils.close(root)
-            accepted()
-        }
-    }
-
-    Button {
-        objectName: "cancelButton"
-        text: i18n.tr("Cancel")
-
-        gradient: Gradient {
-            GradientStop {
-                position: 0
-                color: "gray"
+    Item {
+        width: parent.width
+        height: childrenRect.height
+        Button {
+            id: okButton
+            objectName: "okButton"
+            anchors {
+                left: parent.left
+                right: parent.horizontalCenter
+                rightMargin: units.gu(1)
             }
 
-            GradientStop {
-                position: 1
-                color: "lightgray"
+            text: i18n.tr("Ok")
+            enabled: textField.acceptableInput
+
+            onClicked: {
+                PopupUtils.close(root)
+                accepted()
             }
         }
 
-        onClicked: {
-            PopupUtils.close(root)
-            rejected()
+        Button {
+            objectName: "cancelButton"
+            text: i18n.tr("Cancel")
+            anchors {
+                left: parent.horizontalCenter
+                right: parent.right
+                leftMargin: units.gu(1)
+            }
+
+            color: "gray"
+
+            onClicked: {
+                PopupUtils.close(root)
+                rejected()
+            }
         }
     }
 }
