@@ -1,24 +1,19 @@
-/***************************************************************************
- * Whatsoever ye do in word or deed, do all in the name of the             *
- * Lord Jesus, giving thanks to God and the Father by him.                 *
- * - Colossians 3:17                                                       *
- *                                                                         *
- * Ubuntu Tasks - A task management system for Ubuntu Touch                *
- * Copyright (C) 2013 Michael Spencer <sonrisesoftware@gmail.com>          *
- *                                                                         *
- * This program is free software: you can redistribute it and/or modify    *
- * it under the terms of the GNU General Public License as published by    *
- * the Free Software Foundation, either version 3 of the License, or       *
- * (at your option) any later version.                                     *
- *                                                                         *
- * This program is distributed in the hope that it will be useful,         *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of          *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the            *
- * GNU General Public License for more details.                            *
- *                                                                         *
- * You should have received a copy of the GNU General Public License       *
- * along with this program. If not, see <http://www.gnu.org/licenses/>.    *
- ***************************************************************************/
+/*
+ * Copyright 2013 Canonical Ltd.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 
@@ -28,7 +23,7 @@ Item {
     /*!
       The image to show inside the checkbox when it is checked.
      */
-    property url tickSource: getIcon("tick")
+    property url tickSource: getIcon("tick.png")
 
     opacity: enabled ? 1.0 : 0.5
 
@@ -38,14 +33,17 @@ Item {
     UbuntuShape {
         id: background
         anchors.fill: parent
-    }
+        anchors.margins: units.gu(0.5)
 
-    Image {
-        id: tick
-        anchors.centerIn: parent
-        smooth: true
-        source: tickSource
-        visible: styledItem.checked || transitionToChecked.running || transitionToUnchecked.running
+        Image {
+            id: tick
+            anchors.centerIn: parent
+            smooth: true
+            source: tickSource
+            visible: styledItem.checked || transitionToChecked.running || transitionToUnchecked.running
+        }
+
+        clip: true
     }
 
     state: styledItem.checked ? "checked" : "unchecked"
