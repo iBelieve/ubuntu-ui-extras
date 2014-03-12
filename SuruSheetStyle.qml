@@ -23,7 +23,7 @@ Item {
     // styling properties
     property color backgroundColor: Qt.rgba(0.2,0.2,0.2,0.97)
     property color headerColor: Qt.rgba(0,0,0,0.2)
-    property real headerHeight: units.gu(8)
+    property real headerHeight: units.gu(6)
     property real buttonContainerWidth: units.gu(14)
 
     implicitWidth: MathUtils.clamp(styledItem.contentsWidth, styledItem.minWidth, styledItem.maxWidth)
