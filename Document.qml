@@ -165,6 +165,29 @@ Object {
         }
     }
 
+    function hasChild(docId) {
+        return children.indexOf(docId) !== -1
+    }
+
+    function filteredChildren(filter) {
+        var list = []
+        for (var docId in childrenData) {
+            if (filter(childrenData[docId]))
+                list.push(docId)
+        }
+
+        return list
+    }
+
+    function getChild(docId) {
+        return newObject(Qt.resolvedUrl("Document.qml"), { docId: docId, parent: document })
+    }
+
+    function newObject(type, args) {
+        var component = Qt.createComponent(type);
+        return component.createObject(document, args);
+    }
+
     function load(json) {
         //print("Loading...")
         loading = true
@@ -208,6 +231,11 @@ Object {
             parent.childrenData[document.docId] = save()
             parent.childChanged(document)
         }
+    }
+
+    function removeChildren() {
+        while (children.length > 0)
+            removeDoc(children[0])
     }
 
     function save() {
