@@ -142,10 +142,15 @@ Object {
         if (data == undefined)
             date = {}
         data[name] = value
-        data = data
-        if (parent && parent.childrenData) {
-            parent.childrenData[document.docId] = save()
-            parent.childChanged(document)
+
+        if (!isGroup()) {
+            print("TRIGGERING:", inGroup)
+            data = data
+
+            if (parent) {
+                parent.childrenData[document.docId] = save()
+                parent.childChanged(document)
+            }
         }
     }
 
@@ -158,11 +163,14 @@ Object {
         //print("Adding a new doc", JSON.stringify(json))
         childrenData[docId] = json
         children.push(docId)
-        children = children
-        childrenData = childrenData
-        if (parent) {
-            parent.childrenData[document.docId] = save()
-            parent.childChanged(document)
+        if (document.inGroup === 0) {
+            children = children
+            childrenData = childrenData
+
+            if (parent) {
+                parent.childrenData[document.docId] = save()
+                parent.childChanged(document)
+            }
         }
     }
 
@@ -186,7 +194,7 @@ Object {
 
     function newObject(type, args) {
         var component = Qt.createComponent(type);
-        return component.createObject(document, args);
+        return component.createObject(mainView, args);
     }
 
     function load(json) {
@@ -222,15 +230,44 @@ Object {
             parent.removeDoc(oldDocId)
     }
 
+    property int inGroup: 0
+
+    function isGroup() {
+        return inGroup > 0 || (parent && parent.isGroup())
+    }
+
+    function startGroup() {
+        print("ENTERING GROUP")
+        document.inGroup += 1
+    }
+
+    function endGroup() {
+        print("EXITING GROUP")
+        document.inGroup -= 1
+
+        if (inGroup === 0) {
+            children = children
+            childrenData = childrenData
+            data = data
+
+            if (parent) {
+                parent.childrenData[document.docId] = save()
+                parent.childChanged(document)
+            }
+        }
+    }
+
     function removeDoc(docId) {
         delete childrenData[docId]
         childrenData = childrenData
         //print(JSON.stringify(childrenData))
         children.splice(children.indexOf(docId), 1)
-        children = children
-        if (parent) {
-            parent.childrenData[document.docId] = save()
-            parent.childChanged(document)
+        if (inGroup === 0) {
+            children = children
+            if (parent) {
+                parent.childrenData[document.docId] = save()
+                parent.childChanged(document)
+            }
         }
     }
 
