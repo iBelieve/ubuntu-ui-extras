@@ -159,6 +159,7 @@ Object {
         childrenData[docId] = json
         children.push(docId)
         children = children
+        childrenData = childrenData
         if (parent) {
             parent.childrenData[document.docId] = save()
             parent.childChanged(document)
