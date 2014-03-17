@@ -27,8 +27,7 @@ Item {
 
     property int columns
     property bool repeaterCompleted: false
-    property var model: []
-    readonly property bool modelIsArray: model instanceof Array
+    property alias model: repeater.model
     property alias delegate: repeater.delegate
     property int contentHeight: 0
 

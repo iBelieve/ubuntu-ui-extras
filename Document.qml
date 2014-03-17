@@ -191,7 +191,7 @@ Object {
     function load(json) {
         //print("Loading...")
         loading = true
-        var list = data
+        var list = {}
         for (var prop in json) {
             if (prop !== "children")
                 list[prop] = json[prop]
@@ -239,6 +239,8 @@ Object {
     }
 
     function save() {
+        if (data === undefined)
+            throw "Error: undefined data for: " + docId + " " + JSON.stringify(children)
         var json = JSON.parse(JSON.stringify(data))
         json.children = JSON.parse(JSON.stringify(childrenData))
         //print("Saving: " + JSON.stringify(json))
