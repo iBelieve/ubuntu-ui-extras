@@ -149,6 +149,7 @@ Object {
 
             if (parent) {
                 parent.childrenData[document.docId] = save()
+                parent.childrenData = parent.childrenData
                 parent.childChanged(document)
             }
         }
@@ -233,7 +234,7 @@ Object {
     property int inGroup: 0
 
     function isGroup() {
-        return inGroup > 0 || (parent && parent.isGroup())
+        return inGroup > 0// || (parent && parent.isGroup())
     }
 
     function startGroup() {
@@ -253,6 +254,10 @@ Object {
             if (parent) {
                 parent.childrenData[document.docId] = save()
                 parent.childChanged(document)
+            }
+
+            for (var i = 0; i < childDocs.length; i++) {
+                childDocs[i].loadFromParent()
             }
         }
     }

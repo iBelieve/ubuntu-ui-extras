@@ -29,8 +29,8 @@ function patch(path, options, callback, args, headers, body) {
     return request(path, "POST", options, callback, args, headers, body)
 }
 
-function put(path, options, callback, args, headers) {
-    return request(path, "PUT", options, callback, args, headers)
+function put(path, options, callback, args, headers, body) {
+    return request(path, "PUT", options, callback, args, headers, body)
 }
 
 //function delete(path, options, callback, args) {
@@ -50,22 +50,26 @@ function request(path, call, options, callback, args, headers, body) {
     if (options.length > 0)
         address += "?" + options.join("&").replace(/ /g, "%20")
 
-    print(call, address)
-    print("Headers", JSON.stringify(headers))
+    print(call, address, body)
+    //print("Headers", JSON.stringify(headers))
 
     var doc = new XMLHttpRequest();
     doc.timeout = 10000;
     doc.onreadystatechange = function() {
         if (doc.readyState === XMLHttpRequest.DONE) {
             print(doc.getResponseHeader("X-RateLimit-Remaining"))
-            print(doc.getResponseHeader("X-GitHub-Media-Type"))
+            //print(doc.getResponseHeader("X-GitHub-Media-Type"))
             //print(doc.responseText)
-            print("Status:",doc.status)
+            print("Status:",doc.status, "for call", call, address, body)
             if (callback !== undefined) {
-                if (doc.status == 200 || doc.status == 201 || doc.status == 202)
+                //print(callback)
+                if (doc.status == 200 || doc.status == 201 || doc.status == 202) {
+                    //print("Calling back with no error...")
                     callback(false, doc.status, doc.responseText, args)
-                else
+                } else {
+                    //print("Calling back with error...")
                     callback(true, doc.status, doc.responseText, args)
+                }
             }
         }
      }
@@ -75,7 +79,7 @@ function request(path, call, options, callback, args, headers, body) {
 
     doc.open(call, address, true);
     for (var key in headers) {
-        print(key + ": " + headers[key])
+        //print(key + ": " + headers[key])
         doc.setRequestHeader(key, headers[key])
     }
     if (body)
