@@ -31,6 +31,14 @@ Object {
 
     property alias path: db.path
 
+    function get(name, def) {
+        return doc.get(name, def)
+    }
+
+    function set(name, value) {
+        return doc.set(name, value)
+    }
+
     U1db.Database {
         id: db;
     }
@@ -39,22 +47,23 @@ Object {
 
     Document {
         id: doc
-        docId: ""
 
-        onChildChanged: storage.dbChanged = true
+        onLoaded: root.loaded()
+        onSave: root.save()
     }
 
     signal loaded()
+    signal save()
 
     Timer {
         interval: 5000
         repeat: true
         running: true
         onTriggered: {
-            if (storage.dbChanged) {
+            //if (storage.dbChanged) {
                 storage.save()
-                storage.dbChanged = false
-            }
+            //    storage.dbChanged = false
+            //}
         }
     }
 
@@ -72,13 +81,10 @@ Object {
             if (!loaded) {
                 //print(JSON.stringify(storage.contents))
                 if (contents && contents.hasOwnProperty("contents")) {
-                    doc.load(contents["contents"])
-                } else {
-                    doc.loaded = true
+                    doc.fromJSON(contents["contents"])
                 }
 
                 loaded = true
-                root.loaded()
             }
         }
 
@@ -87,8 +93,8 @@ Object {
         function save() {
             var json = {}
             //json = storage.contents
-            json["contents"] = doc.save()
-            //print(JSON.stringify(json))
+            json["contents"] = doc.toJSON()
+            //print(JSON.stringify(json.contents))
             storage.contents = json
         }
     }

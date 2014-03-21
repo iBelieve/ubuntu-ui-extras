@@ -21,6 +21,8 @@
  ***************************************************************************/
 .pragma library
 
+var cache = {}
+
 function post(path, options, callback, args, headers, body) {
     return request(path, "POST", options, callback, args, headers, body)
 }
@@ -50,25 +52,35 @@ function request(path, call, options, callback, args, headers, body) {
     if (options.length > 0)
         address += "?" + options.join("&").replace(/ /g, "%20")
 
-    print(call, address, body)
+    if (cache.hasOwnProperty(call)) {
+        headers["If-None-Match"] = cache[call].etag
+        headers["If-Modified-Since"] = cache[call].since
+    }
+
+    //print(call, address, body)
     //print("Headers", JSON.stringify(headers))
 
     var doc = new XMLHttpRequest();
     doc.timeout = 10000;
     doc.onreadystatechange = function() {
         if (doc.readyState === XMLHttpRequest.DONE) {
-            print(doc.getResponseHeader("X-RateLimit-Remaining"))
-            //print(doc.getResponseHeader("X-GitHub-Media-Type"))
+            //print(doc.getResponseHeader("X-RateLimit-Remaining"))
+
+            cache[call] = {
+                "etag":     doc.getResponseHeader("ETag"),
+                "since":    doc.getResponseHeader("Last-Modified")
+            }
+
             //print(doc.responseText)
-            print("Status:",doc.status, "for call", call, address, body)
+            //print("Status:",doc.status, "for call", call, address, body)
             if (callback !== undefined) {
                 //print(callback)
-                if (doc.status == 200 || doc.status == 201 || doc.status == 202) {
+                if (doc.status == 200 || doc.status == 201 || doc.status == 202 || doc.status === 304) {
                     //print("Calling back with no error...")
-                    callback(false, doc.status, doc.responseText, args)
+                    callback(false, doc.status, doc.responseText, args, doc.getResponseHeader("ETag"))
                 } else {
                     //print("Calling back with error...")
-                    callback(true, doc.status, doc.responseText, args)
+                    callback(true, doc.status, doc.responseText, args, doc.getResponseHeader("ETag"))
                 }
             }
         }

@@ -26,267 +26,52 @@ import Ubuntu.Components.Popups 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import "listutils.js" as List
 
-import U1db 1.0 as U1db
-
 Object {
     id: document
 
-    property string docId: ""
-
-    property Object parent
-    property var children: []
-    property var childrenData: { return {} }
-    property int count: children.length
-    property bool loaded: false
-
-    property var data: { return {} }
-
-    signal childChanged(var doc)
-
-    onChildChanged: {
-        //print("Child changed:", doc.docId, parent)
-        //print("Data is", JSON.stringify(save()))
-        if (parent && parent.hasOwnProperty("childrenData")) {
-            //print("Saving to parent")
-            parent.childrenData[document.docId] = save()
-            parent.childChanged(document)
-        }
-
-        for (var i = 0; i < childDocs.length; i++) {
-            if (childDocs[i] !== doc && childDocs[i].docId === doc.docId)
-                childDocs[i].loadFromParent()
-        }
+    property var data: {
+        return {}
     }
 
-    property var childDocs: []
-
-    onLoadedChanged: {
-        //print("Parent is loaded: ", name)
-        if (loaded && childDocs) {
-            for (var i = 0; i < childDocs.length; i++) {
-                //print("A child exists, loading that:", i)
-                childDocs[i].loadFromParent()
-            }
-        }
-    }
-
-    onParentChanged: loadFromParent()
-    onDocIdChanged: loadFromParent()
-    onDataChanged: {
-        if (loaded) return
-        loadFromParent()
-    }
-
-    Component.onCompleted: loadFromParent()
-
-    property bool loading
-
-    function loadFromParent() {
-        if (loading)
-            return
-        //print("Attempting to load from parent:", docId)
-
-        if (parent && (!parent.childDocs || parent.childDocs.indexOf(document) === -1)) {
-            if (!parent.childDocs)
-                parent.childDocs = []
-            parent.childDocs.push(document)
-        }
-
-        if (parent && parent.loaded && docId !== "" && data) {
-            //print("Loading " + docId + " from parent...")
-            //print(JSON.stringify(parent.children))
-            //print(JSON.stringify(parent.childrenData))
-            //print(parent.children.indexOf(docId))
-            if (parent.children.indexOf(docId) !== -1) {
-                if (parent.childrenData && parent.childrenData.hasOwnProperty(docId)) {
-                    //print(name + " exists, loading")
-                    load(parent.childrenData[docId])
-                } else {
-                    //print("ERROR")
-                }
-            } else {
-                //print(docId + " is a new document")
-                if (!parent.childrenData)
-                    parent.childrenData = {}
-
-                //print("Parent before adding:",JSON.stringify(parent.childrenData))
-                parent.childrenData[docId] = save()
-                parent.children.push(docId)
-                //print("Parent after adding:",JSON.stringify(parent.childrenData))
-
-                parent.childChanged(document)
-
-                loaded = true
-            }
-        }
-    }
-
-    function  get(name, def) {
-        return data.hasOwnProperty(name) ? data[name] : def
-    }
-
-    function  getOrInit(name, def) {
-        if (loaded) {
-            if (data.hasOwnProperty(name)) {
-                return data[name]
-            } else {
-                set(name, def)
-                return def
-            }
-        } else {
-            return data.hasOwnProperty(name) ? data[name] : def
-        }
-    }
+    property int version: 1
 
     function set(name, value) {
-        if (data == undefined)
-            date = {}
         data[name] = value
-
-        if (!isGroup()) {
-            print("TRIGGERING:", inGroup)
-            data = data
-
-            if (parent) {
-                parent.childrenData[document.docId] = save()
-                parent.childrenData = parent.childrenData
-                parent.childChanged(document)
-            }
-        }
+        data = data //TODO: Is there a better way?
     }
 
     function sync(name, value) {
-        set(name, value)
-        return Qt.binding(function() { return get(name) })
+        data[name] = value
+        data = data //TODO: Is there a better way?
+        return Qt.binding(function() { return get(name, value) })
     }
 
-    function newDoc(docId, json) {
-        //print("Adding a new doc", JSON.stringify(json))
-        childrenData[docId] = json
-        children.push(docId)
-        if (document.inGroup === 0) {
-            children = children
-            childrenData = childrenData
-
-            if (parent) {
-                parent.childrenData[document.docId] = save()
-                parent.childChanged(document)
-            }
+    function get(name, def) {
+        if (data.hasOwnProperty(name)) {
+            return data[name]
+        } else {
+            return def
         }
     }
 
-    function hasChild(docId) {
-        return children.indexOf(docId) !== -1
-    }
+    signal upgrade(var version)
+    signal save()
+    signal loaded()
 
-    function filteredChildren(filter) {
-        var list = []
-        for (var docId in childrenData) {
-            if (filter(childrenData[docId]))
-                list.push(docId)
+    function fromJSON(json) {
+        data = JSON.parse(JSON.stringify(json))
+        if (data.version < document.version) {
+            upgrade(data.version)
+        } else if (data.version > document.version) {
+            throw "Stored version is higher than the supported version: " + data.version + " > " + document.version
         }
-
-        return list
+        loaded()
     }
 
-    function getChild(docId) {
-        return newObject(Qt.resolvedUrl("Document.qml"), { docId: docId, parent: document })
-    }
-
-    function newObject(type, args) {
-        var component = Qt.createComponent(type);
-        return component.createObject(mainView, args);
-    }
-
-    function load(json) {
-        //print("Loading...")
-        loading = true
-        var list = {}
-        for (var prop in json) {
-            if (prop !== "children")
-                list[prop] = json[prop]
-        }
-
-        if (json && json.hasOwnProperty("children")) {
-            childrenData = json.children
-            //print("Children data: ", JSON.stringify(childrenData))
-            children = []
-            for (var docId in childrenData) {
-                //print("Checking childrenData", i, childrenData[i])
-                children.push(docId)
-            }
-            children = children
-        }
-
-        data = list
-
-        loaded = true
-        loading = false
-    }
-
-    function remove() {
-        var oldDocId = docId
-        docId = ""
-        if (parent)
-            parent.removeDoc(oldDocId)
-    }
-
-    property int inGroup: 0
-
-    function isGroup() {
-        return inGroup > 0// || (parent && parent.isGroup())
-    }
-
-    function startGroup() {
-        print("ENTERING GROUP")
-        document.inGroup += 1
-    }
-
-    function endGroup() {
-        print("EXITING GROUP")
-        document.inGroup -= 1
-
-        if (inGroup === 0) {
-            children = children
-            childrenData = childrenData
-            data = data
-
-            if (parent) {
-                parent.childrenData[document.docId] = save()
-                parent.childChanged(document)
-            }
-
-            for (var i = 0; i < childDocs.length; i++) {
-                childDocs[i].loadFromParent()
-            }
-        }
-    }
-
-    function removeDoc(docId) {
-        delete childrenData[docId]
-        childrenData = childrenData
-        //print(JSON.stringify(childrenData))
-        children.splice(children.indexOf(docId), 1)
-        if (inGroup === 0) {
-            children = children
-            if (parent) {
-                parent.childrenData[document.docId] = save()
-                parent.childChanged(document)
-            }
-        }
-    }
-
-    function removeChildren() {
-        while (children.length > 0)
-            removeDoc(children[0])
-    }
-
-    function save() {
-        if (data === undefined)
-            throw "Error: undefined data for: " + docId + " " + JSON.stringify(children)
+    function toJSON() {
+        save()
         var json = JSON.parse(JSON.stringify(data))
-        json.children = JSON.parse(JSON.stringify(childrenData))
-        //print("Saving: " + JSON.stringify(json))
+        json.version = document.version
         return json
     }
 }
