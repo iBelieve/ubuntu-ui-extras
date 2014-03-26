@@ -21,8 +21,6 @@
  ***************************************************************************/
 .pragma library
 
-var cache = {}
-
 function post(path, options, callback, args, headers, body) {
     return request(path, "POST", options, callback, args, headers, body)
 }
@@ -52,11 +50,6 @@ function request(path, call, options, callback, args, headers, body) {
     if (options.length > 0)
         address += "?" + options.join("&").replace(/ /g, "%20")
 
-    if (cache.hasOwnProperty(call)) {
-        headers["If-None-Match"] = cache[call].etag
-        headers["If-Modified-Since"] = cache[call].since
-    }
-
     //print(call, address, body)
     //print("Headers", JSON.stringify(headers))
 
@@ -65,11 +58,6 @@ function request(path, call, options, callback, args, headers, body) {
     doc.onreadystatechange = function() {
         if (doc.readyState === XMLHttpRequest.DONE) {
             //print(doc.getResponseHeader("X-RateLimit-Remaining"))
-
-            cache[call] = {
-                "etag":     doc.getResponseHeader("ETag"),
-                "since":    doc.getResponseHeader("Last-Modified")
-            }
 
             //print(doc.responseText)
             print("Status:",doc.status, "for call", call, address, body)
