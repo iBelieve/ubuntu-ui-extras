@@ -57,7 +57,7 @@ function request(path, call, options, callback, args, headers, body) {
     doc.timeout = 10000;
     doc.onreadystatechange = function() {
         if (doc.readyState === XMLHttpRequest.DONE) {
-            //print(doc.getResponseHeader("X-RateLimit-Remaining"))
+            print(doc.getResponseHeader("X-RateLimit-Remaining"))
 
             //print(doc.responseText)
             print("Status:",doc.status, "for call", call, address, body)

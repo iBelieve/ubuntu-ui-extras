@@ -96,6 +96,8 @@ Object {
             //json = storage.contents
             json["contents"] = doc.toJSON()
             //print(JSON.stringify(json.contents))
+            var middle = new Date()
+            print("Processing completed in " + (middle - start) + " milliseconds")
             storage.contents = json
 
             var end = new Date()
