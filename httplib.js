@@ -72,7 +72,7 @@ function request(path, call, options, callback, args, headers, body) {
             }
 
             //print(doc.responseText)
-            //print("Status:",doc.status, "for call", call, address, body)
+            print("Status:",doc.status, "for call", call, address, body)
             if (callback !== undefined) {
                 //print(callback)
                 if (doc.status == 200 || doc.status == 201 || doc.status == 202 || doc.status === 304) {

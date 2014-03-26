@@ -66,7 +66,7 @@ function dateIsBeforeOrSame(date1, date2) {
 function friendlyTime(time) {
     var now = new Date()
     var seconds = (now - time)/1000;
-    print("Difference:", seconds)
+    print("Difference:", now, time, now - time)
     var minutes = Math.round(seconds/60);
     if (minutes < 1)
         return i18n.tr("Now")

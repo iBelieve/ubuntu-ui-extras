@@ -56,7 +56,7 @@ Object {
     signal save()
 
     Timer {
-        interval: 5000
+        interval: 5 * 60 * 1000
         repeat: true
         running: true
         onTriggered: {
@@ -91,11 +91,16 @@ Object {
         Component.onDestruction: save()
 
         function save() {
+            var start = new Date()
             var json = {}
             //json = storage.contents
             json["contents"] = doc.toJSON()
             //print(JSON.stringify(json.contents))
             storage.contents = json
+
+            var end = new Date()
+
+            print("Saving completed in " + (end - start) + " milliseconds")
         }
     }
 }

@@ -34,6 +34,7 @@ Object {
     }
 
     property int version: 1
+    property bool saved
 
     function set(name, value) {
         data[name] = value
@@ -58,6 +59,8 @@ Object {
     signal save()
     signal loaded()
 
+    onSave: saved = true
+
     function fromJSON(json) {
         data = JSON.parse(JSON.stringify(json))
         if (data.version < document.version) {
@@ -69,7 +72,8 @@ Object {
     }
 
     function toJSON() {
-        save()
+        if (!saved)
+            save()
         var json = JSON.parse(JSON.stringify(data))
         json.version = document.version
         return json
