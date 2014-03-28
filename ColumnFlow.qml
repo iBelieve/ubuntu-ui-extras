@@ -70,12 +70,11 @@ Item {
 
         //add the first <column> elements
         for (i = 0; count < columns && i < columnFlow.children.length; i++) {
-            lastItem[i] = i
             if (!columnFlow.children[i] || String(columnFlow.children[i]).indexOf("QQuickRepeater") == 0) continue
 
+            lastItem[count] = i
             columnHeights[i] = columnFlow.children[i].height
 
-            print("Last I", columnFlow.children[i], String(columnFlow.children[i]), lastI)
             columnFlow.children[i].anchors.top = columnFlow.top
             columnFlow.children[i].anchors.left = (lastI === -1 ? columnFlow.left : columnFlow.children[lastI].right)
             columnFlow.children[i].anchors.right = undefined
@@ -102,8 +101,8 @@ Item {
 
             // add the element to the shortest column
             columnFlow.children[i].anchors.top = columnFlow.children[lastItem[newColumn]].bottom
-            columnFlow.children[i].anchors.left = columnFlow.children[newColumn].left
-            columnFlow.children[i].anchors.right = columnFlow.children[newColumn].right
+            columnFlow.children[i].anchors.left = columnFlow.children[lastItem[newColumn]].left
+            columnFlow.children[i].anchors.right = columnFlow.children[lastItem[newColumn]].right
 
             lastItem[newColumn] = i
             columnHeights[newColumn] += columnFlow.children[i].height
