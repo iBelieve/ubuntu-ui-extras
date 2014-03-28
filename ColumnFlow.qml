@@ -34,10 +34,27 @@ Item {
     onColumnsChanged: reEvalColumns()
     onModelChanged: reEvalColumns()
 
-    onWidthChanged: {
+    onWidthChanged: updateWidths()
+
+    function updateWidths() {
         if (repeaterCompleted)
-            for (var i = 0; i < Math.min(repeater.count, columns); i++)
-                repeater.itemAt(i).width = width / columns
+            for (var i = 0; i < Math.min(columnFlow.children.length, columns); i++)
+                columnFlow.children[i].width = width / columns
+    }
+
+    function dump(obj, indent) {
+        if (indent === undefined)
+            indent = 0
+        var spacing = ""
+        for (var a = 0; a < indent; a++) {
+            spacing += " "
+        }
+        print(spacing + String(obj))
+        if (obj.hasOwnProperty("children")) {
+            for (var i = 0; i < obj.children.length; i++) {
+                dump(obj.children[i], indent+1)
+            }
+        }
     }
 
     function reEvalColumns() {
@@ -46,24 +63,34 @@ Item {
         var i, j
         var columnHeights = new Array(columns);
         var lastItem = new Array(columns)
+        var lastI = -1
+        var count = 0
+
+        //dump(columnFlow)
 
         //add the first <column> elements
-        for (i = 0; i < Math.min(repeater.count, columns); i++) {
+        for (i = 0; count < columns && i < columnFlow.children.length; i++) {
             lastItem[i] = i
-            if (!repeater.itemAt(i)) continue
+            if (!columnFlow.children[i] || String(columnFlow.children[i]).indexOf("QQuickRepeater") == 0) continue
 
-            columnHeights[i] = repeater.itemAt(i).height
+            columnHeights[i] = columnFlow.children[i].height
 
-            repeater.itemAt(i).anchors.top = columnFlow.top
-            repeater.itemAt(i).anchors.left = (i === 0 ? columnFlow.left : repeater.itemAt(i - 1).right)
-            repeater.itemAt(i).anchors.right = undefined
-            repeater.itemAt(i).width = columnFlow.width / columns
+            print("Last I", columnFlow.children[i], String(columnFlow.children[i]), lastI)
+            columnFlow.children[i].anchors.top = columnFlow.top
+            columnFlow.children[i].anchors.left = (lastI === -1 ? columnFlow.left : columnFlow.children[lastI].right)
+            columnFlow.children[i].anchors.right = undefined
+            columnFlow.children[i].width = columnFlow.width / columns
+
+            lastI = i
+            count++
         }
 
         //add the other elements
-        for (i = i; i < repeater.count; i++) {
+        for (i = i; i < columnFlow.children.length; i++) {
             var highestHeight = Number.MAX_VALUE
             var newColumn = 0
+
+            if (!columnFlow.children[i] || !columnFlow.children[i].visible) continue
 
             // find the shortest column
             for (j = 0; j < columns; j++) {
@@ -74,18 +101,20 @@ Item {
             }
 
             // add the element to the shortest column
-            repeater.itemAt(i).anchors.top = repeater.itemAt(lastItem[newColumn]).bottom
-            repeater.itemAt(i).anchors.left = repeater.itemAt(newColumn).left
-            repeater.itemAt(i).anchors.right = repeater.itemAt(newColumn).right
+            columnFlow.children[i].anchors.top = columnFlow.children[lastItem[newColumn]].bottom
+            columnFlow.children[i].anchors.left = columnFlow.children[newColumn].left
+            columnFlow.children[i].anchors.right = columnFlow.children[newColumn].right
 
             lastItem[newColumn] = i
-            columnHeights[newColumn] += repeater.itemAt(i).height
+            columnHeights[newColumn] += columnFlow.children[i].height
         }
 
         var cHeight = 0
         for (i = 0; i < columns; i++)
             cHeight = Math.max(cHeight, columnHeights[i])
         contentHeight = cHeight
+
+        updateWidths()
     }
 
 
