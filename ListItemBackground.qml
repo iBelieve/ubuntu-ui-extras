@@ -33,7 +33,8 @@ Rectangle {
 
     anchors.fill: parent
     //color: Theme.palette.normal.base;
-    color: Qt.rgba(0.2,0.2,0.2,0.3)
+    anchors.bottomMargin: units.dp(2)
+    color: Qt.rgba(0,0,0,0.2)
     property color fontColor: Theme.palette.normal.baseText//Theme.palette.selected.backgroundText
 
     Image {

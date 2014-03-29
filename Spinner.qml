@@ -42,6 +42,10 @@ Item {
 
     property var value: model.get(listView.currentIndex).modelData
 
+    onValueChanged: {
+        listView.currentIndex = value - minValue
+    }
+
     Component.onCompleted: {
         createModel()
         listView.currentIndex = value - minValue
@@ -81,6 +85,8 @@ Item {
         for (var i = minValue; i <= maxValue; i++) {
             model.append({modelData: i})
         }
+
+        listView.currentIndex = value - minValue
     }
 
     ListModel {
