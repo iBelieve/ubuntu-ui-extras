@@ -34,7 +34,46 @@ Page {
     property color completedPage
     property color incompletePage
 
+    property bool exitable: false
+
     signal finished
+
+    onFinished: {
+        if (exitable) {
+            pageStack.pop()
+        } else {
+            hideAnimation.start()
+        }
+    }
+
+    SequentialAnimation {
+        id: hideAnimation
+
+        UbuntuNumberAnimation {
+            duration: UbuntuAnimation.SlowDuration * 1/2
+            target: root
+            property: "opacity"
+            from: 1; to: 0;
+        }
+
+        ScriptAction {
+            script: {
+                pageStack.pop(root)
+            }
+        }
+    }
+
+    Component.onCompleted: mainView.forceActiveFocus()
+
+    Keys.onLeftPressed: {
+        if (list.currentIndex > 0)
+            list.currentIndex--
+    }
+
+    Keys.onRightPressed: {
+        if (list.currentIndex < list.count - 1)
+            list.currentIndex++
+    }
 
     // Label to skip the walkthrough. Only visible on the first slide
     Label {
@@ -132,7 +171,7 @@ Page {
     }
 
     tools: ToolbarItems {
-        locked: true
-        opened: false
+        locked: !exitable
+        opened: exitable
     }
 }
