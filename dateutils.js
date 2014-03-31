@@ -99,9 +99,15 @@ function parseDuration(str) {
     var days = str.match(/(\d+)\s*d/);
     var hours = str.match(/(\d+)\s*h/);
     var minutes = str.match(/(\d+)\s*m/);
-    var seconds = parseInt(str.match(/(\d+)\s*s/));
-    if (days) { seconds += parseInt(days[1])*86400; }
-    if (hours) { seconds += parseInt(hours[1])*3600; }
-    if (minutes) { seconds += parseInt(minutes[1])*60; }
-    return seconds * 1000;
+    var seconds = str.match(/(\d+)\s*s/);
+    var time = 0;
+    if (days)
+        time += parseInt(days[1]) * 86400
+    if (hours)
+        time += parseInt(hours[1]) * 3600
+    if (minutes)
+        time += parseInt(minutes[1]) * 60
+    if (seconds)
+        time += parseInt(seconds[1])
+    return time * 1000;
 }

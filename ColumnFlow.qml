@@ -37,9 +37,19 @@ Item {
     onWidthChanged: updateWidths()
 
     function updateWidths() {
-        if (repeaterCompleted)
-            for (var i = 0; i < Math.min(columnFlow.children.length, columns); i++)
+        if (repeaterCompleted) {
+            var count = 0
+
+            //dump(columnFlow)
+
+            //add the first <column> elements
+            for (var i = 0; count < columns && i < columnFlow.children.length; i++) {
+                if (!columnFlow.children[i] || String(columnFlow.children[i]).indexOf("QQuickRepeater") == 0) continue
+
                 columnFlow.children[i].width = width / columns
+                count++
+            }
+        }
     }
 
     function dump(obj, indent) {
@@ -73,7 +83,7 @@ Item {
             if (!columnFlow.children[i] || String(columnFlow.children[i]).indexOf("QQuickRepeater") == 0) continue
 
             lastItem[count] = i
-            columnHeights[i] = columnFlow.children[i].height
+            columnHeights[count] = columnFlow.children[i].height
 
             columnFlow.children[i].anchors.top = columnFlow.top
             columnFlow.children[i].anchors.left = (lastI === -1 ? columnFlow.left : columnFlow.children[lastI].right)
