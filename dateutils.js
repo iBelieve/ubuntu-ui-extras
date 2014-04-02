@@ -111,3 +111,7 @@ function parseDuration(str) {
         time += parseInt(seconds[1])
     return time * 1000;
 }
+
+function daysUntilDate(date) {
+    return Math.floor((new Date(date) - new Date())/(1000*60*60*24))
+}

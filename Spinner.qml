@@ -42,8 +42,13 @@ Item {
 
     property var value: model.get(listView.currentIndex).modelData
 
+    property bool loaded
+
     onValueChanged: {
-        listView.currentIndex = value - minValue
+        if (!loaded) {
+            listView.currentIndex = value - minValue
+            loaded = true
+        }
     }
 
     Component.onCompleted: {
@@ -82,6 +87,8 @@ Item {
     }
 
     function createModel() {
+        if (model.count > 0)
+            return
         for (var i = minValue; i <= maxValue; i++) {
             model.append({modelData: i})
         }

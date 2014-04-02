@@ -23,12 +23,13 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1
+import "dateutils.js" as DateUtils
 
 UbuntuShape {
     color: Qt.rgba(0.5,0.5,0.5,0.4)
 
     width: units.gu(20)
-    height: units.gu(18)
+    height: header.height + units.gu(18)
 
     property var initialDate: new Date()
 
@@ -48,14 +49,48 @@ UbuntuShape {
     }
 
     Item {
+        id: header
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: parent.top
+        }
+
+        height: units.gu(5)
+
+        Label {
+            id: label
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            anchors.leftMargin: units.gu(2)
+            text: Qt.formatDate(date)
+        }
+
+        Label {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: parent.right
+            anchors.rightMargin: units.gu(2)
+            text: i18n.tr("%1 days").arg(DateUtils.daysUntilDate(date))
+        }
+
+
+    }
+
+    ThinDivider {
+        id: divider
+        anchors.top: header.bottom
+    }
+
+    Item {
         id: rectangle
         //color: Qt.rgba(0.2,0.2,0.2,0.2)
 
         anchors {
-            fill: parent
-            //left: parent.left
-            //right: parent.right
-            //top: header.bottom
+            left: parent.left
+            right: parent.right
+            top: divider.bottom
+            topMargin: units.dp(-1)
+            bottom: parent.bottom
         }
 
         ValuesSpinner {
