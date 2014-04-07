@@ -44,18 +44,39 @@ Dialog {
         validator: RegExpValidator {
             regExp: /.+/
         }
+        style: DialogTextFieldStyle {}
     }
 
     Item {
         width: parent.width
         height: childrenRect.height
+
         Button {
-            id: okButton
-            objectName: "okButton"
+            objectName: "cancelButton"
+            text: i18n.tr("Cancel")
+
             anchors {
                 left: parent.left
                 right: parent.horizontalCenter
                 rightMargin: units.gu(1)
+            }
+
+            color: "gray"
+
+            onClicked: {
+                PopupUtils.close(root)
+                rejected()
+            }
+        }
+
+        Button {
+            id: okButton
+            objectName: "okButton"
+
+            anchors {
+                left: parent.horizontalCenter
+                right: parent.right
+                leftMargin: units.gu(1)
             }
 
             text: i18n.tr("Ok")
@@ -64,23 +85,6 @@ Dialog {
             onClicked: {
                 PopupUtils.close(root)
                 accepted()
-            }
-        }
-
-        Button {
-            objectName: "cancelButton"
-            text: i18n.tr("Cancel")
-            anchors {
-                left: parent.horizontalCenter
-                right: parent.right
-                leftMargin: units.gu(1)
-            }
-
-            color: "gray"
-
-            onClicked: {
-                PopupUtils.close(root)
-                rejected()
             }
         }
     }

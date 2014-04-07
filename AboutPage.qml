@@ -51,6 +51,8 @@ TabbedPage {
         return text.replace(/<a(.*?)>(.*?)</g, "<a $1><font color=\"" + linkColor + "\">$2</font><")
     }
 
+    property bool landscape: width > height && height < units.gu(60)
+
     Item {
         anchors {
             left: parent.left
@@ -76,6 +78,44 @@ TabbedPage {
         Column {
             anchors {
                 centerIn: parent
+                horizontalCenterOffset: landscape ? -parent.width/4 : 0
+            }
+            spacing: units.gu(3)
+
+            UbuntuShape {
+                visible: iconFrame && landscape
+                image: Image {
+                    id: icon2
+                    source: icon.source
+                }
+
+                width: units.gu(16)
+                height: width * icon.sourceSize.height/icon.sourceSize.width
+                radius: "medium"
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+            Image {
+                source: icon.source
+                width: units.gu(16.1)
+                height: width * icon.sourceSize.height/icon.sourceSize.width
+                visible: !iconFrame && landscape
+
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+            Label {
+                fontSize: "large"
+                text: appName
+                visible: landscape
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+        }
+
+        Column {
+            anchors {
+                centerIn: parent
+                horizontalCenterOffset: landscape ? parent.width/4 : 0
                 margins: units.gu(3)
                 topMargin: units.gu(8)
             }
@@ -83,7 +123,7 @@ TabbedPage {
             spacing: units.gu(3)
 
             UbuntuShape {
-                visible: iconFrame
+                visible: iconFrame && !landscape
                 image: Image {
                     id: icon
                 }
@@ -98,6 +138,7 @@ TabbedPage {
                 source: icon.source
                 width: units.gu(16.1)
                 height: width * icon.sourceSize.height/icon.sourceSize.width
+                visible: !iconFrame && !landscape
 
                 anchors.horizontalCenter: parent.horizontalCenter
             }
@@ -105,6 +146,7 @@ TabbedPage {
             Label {
                 fontSize: "large"
                 text: appName
+                visible: !landscape
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 

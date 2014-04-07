@@ -28,7 +28,7 @@ import Ubuntu.Components.ListItems 0.1
 Rectangle {
     id: swipeBackgroundItem
 
-    property string iconSource
+    property url iconSource
     property string text
 
     anchors.fill: parent

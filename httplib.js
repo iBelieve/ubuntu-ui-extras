@@ -54,13 +54,13 @@ function request(path, call, options, callback, args, headers, body) {
     //print("Headers", JSON.stringify(headers))
 
     var doc = new XMLHttpRequest();
-    doc.timeout = 10000;
+    doc.timeout = 1000;
     doc.onreadystatechange = function() {
         if (doc.readyState === XMLHttpRequest.DONE) {
-            print(doc.getResponseHeader("X-RateLimit-Remaining"))
+            //print(doc.getResponseHeader("X-RateLimit-Remaining"))
 
             //print(doc.responseText)
-            print("Status:",doc.status, "for call", call, address, body)
+            //print("Status:",doc.status, "for call", call, address, body)
             if (callback !== undefined) {
                 //print(callback)
                 if (doc.status == 200 || doc.status == 201 || doc.status == 202 || doc.status === 304) {

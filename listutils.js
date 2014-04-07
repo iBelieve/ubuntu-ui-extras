@@ -26,7 +26,6 @@ function iter(list, func) {
     for (var i = 0; i < length(list); i++) {
         var item = getItem(list, i)
         var ans = func(item)
-        print(ans)
         value += ans
     }
 

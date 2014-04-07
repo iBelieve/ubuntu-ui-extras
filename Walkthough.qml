@@ -78,6 +78,7 @@ Page {
     // Label to skip the walkthrough. Only visible on the first slide
     Label {
         id: skipLabel
+        objectName:"skipButton"
 
         opacity: 0.5
         fontSize: "small"

@@ -80,7 +80,8 @@ Item {
 
         //add the first <column> elements
         for (i = 0; count < columns && i < columnFlow.children.length; i++) {
-            if (!columnFlow.children[i] || String(columnFlow.children[i]).indexOf("QQuickRepeater") == 0) continue
+            if (!columnFlow.children[i] || String(columnFlow.children[i]).indexOf("QQuickRepeater") == 0
+                     || !columnFlow.children[i].visible) continue
 
             lastItem[count] = i
             columnHeights[count] = columnFlow.children[i].height

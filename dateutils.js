@@ -63,6 +63,12 @@ function dateIsBeforeOrSame(date1, date2) {
     return ans
 }
 
+function dateIsThisWeek(date) {
+    var end = new Date()
+    end.setDate(end.getDate() + 7)
+    return dateIsBefore(date, end)
+}
+
 function friendlyTime(time) {
     var now = new Date()
     var seconds = (now - time)/1000;
@@ -114,4 +120,13 @@ function parseDuration(str) {
 
 function daysUntilDate(date) {
     return Math.floor((new Date(date) - new Date())/(1000*60*60*24))
+}
+
+function toUTC(date) {
+    return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+}
+
+function timeFromDate(date) {
+    print(date.getSeconds(),date.getMinutes() * 60,date.getHours() * 3600)
+    return 1000 * (date.getSeconds() + date.getMinutes() * 60 + date.getHours() * 3600)
 }
