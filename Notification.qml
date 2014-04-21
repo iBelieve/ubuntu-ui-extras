@@ -38,7 +38,7 @@ Rectangle {
         id: label
         anchors.centerIn: parent
         text: notification.text
-        fontSize: units.dp(21)
+        fontSize: "medium"
     }
 
     Timer {
