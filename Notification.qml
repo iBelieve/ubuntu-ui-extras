@@ -7,7 +7,7 @@ Rectangle {
     anchors {
         horizontalCenter: parent.horizontalCenter
         bottom: parent.bottom
-        margins: (toolbar.opened && !toolbar.locked ? toolbar.height : 0) + units.gu(2)
+        margins: (toolbar.opened && !toolbar.locked ? toolbar.height : 0) + units.gu(2) + (Qt.inputMethod.visible ? Qt.inputMethod.keyboardRectangle.height : 0)
     }
 
     height: label.height + units.gu(3)
