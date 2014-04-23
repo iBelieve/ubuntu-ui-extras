@@ -7,7 +7,7 @@ Rectangle {
     anchors {
         horizontalCenter: parent.horizontalCenter
         bottom: parent.bottom
-        margins: (toolbar.opened && !toolbar.locked ? toolbar.height : 0) + units.gu(2)
+        margins: (toolbar.opened && !toolbar.locked ? toolbar.height : 0) + units.gu(2) + ((!mainView.anchorToKeyboard && Qt.inputMethod.visible) ? Qt.inputMethod.keyboardRectangle.height : 0)
     }
 
     height: label.height + units.gu(3)
@@ -23,6 +23,9 @@ Rectangle {
 
     property bool showing: false
     property string text
+    property MainView mainView
+
+    Component.onCompleted: mainView = findMainView() //This cannot be done as a property binding because the method will later return the QQuickRootItem.
 
     function show(text) {
         notification.text = text
@@ -45,5 +48,13 @@ Rectangle {
         id: timer
         interval: 2000
         onTriggered: showing = false
+    }
+
+    function findMainView() {
+        var up = parent
+        while (up.parent !== null) {
+            up = up.parent
+        }
+        return up
     }
 }
