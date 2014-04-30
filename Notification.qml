@@ -24,17 +24,31 @@ Rectangle {
     property bool showing: false
     property string text
     property MainView mainView
+    property var queue: []
 
     Component.onCompleted: mainView = findMainView() //This cannot be done as a property binding because the method will later return the QQuickRootItem.
 
     function show(text) {
-        notification.text = text
+        queue.push(text)
+        if (!showing) {
+            update()
+        }
+    }
+
+    function update() {
+        notification.text = queue.pop()
         notification.showing = true
     }
 
     onShowingChanged: {
-        if (showing)
+        if (showing) {
             timer.restart()
+        } else {
+            if (queue.length > 0) {
+                timer.interval = 800
+                timer.restart()
+            }
+        }
     }
 
     Label {
@@ -47,7 +61,14 @@ Rectangle {
     Timer {
         id: timer
         interval: 2000
-        onTriggered: showing = false
+        onTriggered: {
+            if (interval === 2000) {
+                showing = false
+            } else {
+                interval = 2000
+                update()
+            }
+        }
     }
 
     function findMainView() {
