@@ -71,7 +71,7 @@ Item {
         if (!repeaterCompleted)
             return
         var i, j
-        var columnHeights = new Array(columns);
+        var columnHeights = [0,0,0];
         var lastItem = new Array(columns)
         var lastI = -1
         var count = 0
@@ -120,7 +120,8 @@ Item {
         }
 
         var cHeight = 0
-        for (i = 0; i < columns; i++)
+        print("HEIGHTS:", JSON.stringify(columnHeights))
+        for (i = 0; i < columnHeights.length; i++)
             cHeight = Math.max(cHeight, columnHeights[i])
         contentHeight = cHeight
 

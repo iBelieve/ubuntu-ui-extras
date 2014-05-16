@@ -18,11 +18,13 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 
+import QtGraphicalEffects 1.0
+
 Item {
     id: visuals
     // styling properties
     property color backgroundColor: Qt.rgba(0.2,0.2,0.2,0.97)
-    property color headerColor: Qt.rgba(0,0,0,0.2)
+    property color headerColor: Qt.rgba(0,0,0,0.3)
     property real headerHeight: units.gu(6)
     property real buttonContainerWidth: units.gu(14)
 
@@ -32,6 +34,16 @@ Item {
     property alias contentItem: containerItem
 
     property bool maximized: styledItem.contentsWidth > styledItem.maxWidth
+
+    RectangularGlow {
+        id: glowEffect
+
+        opacity: 0.6
+        anchors.fill: parent
+        glowRadius: units.gu(2)
+        //cornerRadius: 0
+        color: "black"
+    }
 
     UbuntuShape {
         id: background
@@ -86,10 +98,19 @@ Item {
             color: visuals.headerColor
         }
 
+        Rectangle {
+            anchors.bottom: parent.bottom
+            width: parent.width
+            height: units.dp(2)
+
+            color: UbuntuColors.orange
+        }
+
         Label {
             id: headerText
             anchors {
                 verticalCenter: parent.verticalCenter
+                verticalCenterOffset: -units.dp(1)
                 left: leftButtonContainer.right
                 right: rightButtonContainer.left
             }
@@ -107,6 +128,7 @@ Item {
                 left: parent.left
                 top: parent.top
                 bottom: parent.bottom
+                bottomMargin: units.dp(2)
             }
             width: visuals.buttonContainerWidth
             Component.onCompleted: header.updateButton(styledItem.leftButton, leftButtonContainer)
@@ -118,6 +140,7 @@ Item {
                 right: parent.right
                 top: parent.top
                 bottom: parent.bottom
+                bottomMargin: units.dp(2)
             }
             width: visuals.buttonContainerWidth
             Component.onCompleted: header.updateButton(styledItem.rightButton, rightButtonContainer)

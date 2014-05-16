@@ -25,12 +25,16 @@ import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1
 import QtQuick 2.0
 
-Item {
+Rectangle {
+    id: root
     property string mode: "left" // or right
+
+    color: "transparent"
 
     ThinDivider {
         id: divider
         rotation: mode === "left" ? 90 : -90
+        visible: root.color.a === 0
 
         width: parent.height
 
@@ -40,7 +44,7 @@ Item {
             centerIn: parent
         }
     }
-    width: divider.height
+    width: divider.visible ? divider.height : 1
 
     anchors {
         top: parent ? parent.top : undefined

@@ -50,12 +50,14 @@ import Ubuntu.Components.ListItems 0.1
 Rectangle {
     id: root
 
-    color: Qt.rgba(0.2,0.2,0.2,0.4)
+    color: Qt.rgba(0.2,0.2,0.2,0.6)
 
     property bool expanded: true
 
     property string mode: "left" // or "right"
     property alias header: headerItem.text
+
+    property alias dividerColor: divider.color
 
     anchors {
         left: mode === "left" ? parent.left : undefined
@@ -65,6 +67,7 @@ Rectangle {
     }
 
     VerticalDivider {
+        id: divider
         mode: root.mode
 
         anchors {
@@ -72,7 +75,7 @@ Rectangle {
             bottom: parent.bottom
             right: mode === "left" ? parent.right : undefined
             left: mode === "right" ? parent.left : undefined
-            rightMargin: -1
+            //rightMargin: -1
         }
     }
 
