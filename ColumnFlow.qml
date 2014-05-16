@@ -25,7 +25,7 @@ Rectangle {
 Item {
     id: columnFlow
 
-    property int columns
+    property int columns: 1
     property bool repeaterCompleted: false
     property alias model: repeater.model
     property alias delegate: repeater.delegate
@@ -44,7 +44,9 @@ Item {
 
             //add the first <column> elements
             for (var i = 0; count < columns && i < columnFlow.children.length; i++) {
-                if (!columnFlow.children[i] || String(columnFlow.children[i]).indexOf("QQuickRepeater") == 0) continue
+                print(i, count)
+                if (!columnFlow.children[i] || String(columnFlow.children[i]).indexOf("QQuickRepeater") == 0
+                         || !columnFlow.children[i].visible) continue
 
                 columnFlow.children[i].width = width / columns
                 count++
@@ -68,10 +70,12 @@ Item {
     }
 
     function reEvalColumns() {
-        if (!repeaterCompleted)
+        print("COMPLETED:", columnFlow.repeaterCompleted)
+        if (columnFlow.repeaterCompleted === false)
             return
+        print("DONE")
         var i, j
-        var columnHeights = [0,0,0];
+        var columnHeights = new Array(columns);
         var lastItem = new Array(columns)
         var lastI = -1
         var count = 0
@@ -79,7 +83,10 @@ Item {
         //dump(columnFlow)
 
         //add the first <column> elements
+        //print(columns,columnFlow.children.length)
         for (i = 0; count < columns && i < columnFlow.children.length; i++) {
+            //print(columnFlow.children[i], columnFlow.children[i].visible)
+
             if (!columnFlow.children[i] || String(columnFlow.children[i]).indexOf("QQuickRepeater") == 0
                      || !columnFlow.children[i].visible) continue
 
@@ -95,16 +102,21 @@ Item {
             count++
         }
 
+        print("HEIGHTS 1", JSON.stringify(columnHeights))
+
         //add the other elements
         for (i = i; i < columnFlow.children.length; i++) {
             var highestHeight = Number.MAX_VALUE
             var newColumn = 0
 
-            if (!columnFlow.children[i] || !columnFlow.children[i].visible) continue
+            print(columnFlow.children[i])
+
+            if (!columnFlow.children[i] || String(columnFlow.children[i]).indexOf("QQuickRepeater") == 0
+                     || !columnFlow.children[i].visible) continue
 
             // find the shortest column
             for (j = 0; j < columns; j++) {
-                if (columnHeights[j] < highestHeight) {
+                if (columnHeights[j] !== null && columnHeights[j] < highestHeight) {
                     newColumn = j
                     highestHeight = columnHeights[j]
                 }
@@ -121,8 +133,12 @@ Item {
 
         var cHeight = 0
         print("HEIGHTS:", JSON.stringify(columnHeights))
-        for (i = 0; i < columnHeights.length; i++)
+        for (i = 0; i < columnHeights.length; i++) {
+            if (columnHeights[i] === null)
+                continue
             cHeight = Math.max(cHeight, columnHeights[i])
+        }
+        print(cHeight, cHeight/units.gu(1))
         contentHeight = cHeight
 
         updateWidths()

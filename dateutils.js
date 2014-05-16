@@ -119,7 +119,7 @@ function parseDuration(str) {
 }
 
 function daysUntilDate(date) {
-    return Math.floor((new Date(date) - new Date())/(1000*60*60*24))
+    return Math.round((new Date(date) - new Date())/(1000*60*60*24))
 }
 
 function toUTC(date) {

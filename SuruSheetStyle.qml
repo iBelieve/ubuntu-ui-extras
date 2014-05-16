@@ -101,7 +101,7 @@ Item {
         Rectangle {
             anchors.bottom: parent.bottom
             width: parent.width
-            height: units.dp(2)
+            height: units.dp(1)
 
             color: UbuntuColors.orange
         }
