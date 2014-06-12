@@ -21,8 +21,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.    *
  ***************************************************************************/
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components 1.1
+import Ubuntu.Components.ListItems 1.0
 
 Item {
     id: root
@@ -42,7 +42,7 @@ Item {
     function shouldDisplay(index) {
         var max = 10
         var total = count
-        print("Should Display?", 10 % (index * 10/total))
+        //print("Should Display?", 10 % (index * 10/total))
         var result = 10 % (index * 10/total)
         return true
     }

@@ -40,11 +40,9 @@ Item {
         if (repeaterCompleted) {
             var count = 0
 
-            //dump(columnFlow)
-
             //add the first <column> elements
             for (var i = 0; count < columns && i < columnFlow.children.length; i++) {
-                print(i, count)
+                //print(i, count)
                 if (!columnFlow.children[i] || String(columnFlow.children[i]).indexOf("QQuickRepeater") == 0
                          || !columnFlow.children[i].visible) continue
 
@@ -54,39 +52,19 @@ Item {
         }
     }
 
-    function dump(obj, indent) {
-        if (indent === undefined)
-            indent = 0
-        var spacing = ""
-        for (var a = 0; a < indent; a++) {
-            spacing += " "
-        }
-        print(spacing + String(obj))
-        if (obj.hasOwnProperty("children")) {
-            for (var i = 0; i < obj.children.length; i++) {
-                dump(obj.children[i], indent+1)
-            }
-        }
-    }
-
-    function reEvalColumns() {
-        print("COMPLETED:", columnFlow.repeaterCompleted)
+   function reEvalColumns() {
         if (columnFlow.repeaterCompleted === false)
             return
-        print("DONE")
+
         var i, j
         var columnHeights = new Array(columns);
         var lastItem = new Array(columns)
         var lastI = -1
         var count = 0
 
-        //dump(columnFlow)
-
         //add the first <column> elements
-        //print(columns,columnFlow.children.length)
+        ////print(columns,columnFlow.children.length)
         for (i = 0; count < columns && i < columnFlow.children.length; i++) {
-            //print(columnFlow.children[i], columnFlow.children[i].visible)
-
             if (!columnFlow.children[i] || String(columnFlow.children[i]).indexOf("QQuickRepeater") == 0
                      || !columnFlow.children[i].visible) continue
 
@@ -98,18 +76,18 @@ Item {
             columnFlow.children[i].anchors.right = undefined
             columnFlow.children[i].width = columnFlow.width / columns
 
+            columnFlow.children[i].heightChanged.connect(function() {
+                print("CHANGED")
+            })
+
             lastI = i
             count++
         }
-
-        print("HEIGHTS 1", JSON.stringify(columnHeights))
 
         //add the other elements
         for (i = i; i < columnFlow.children.length; i++) {
             var highestHeight = Number.MAX_VALUE
             var newColumn = 0
-
-            print(columnFlow.children[i])
 
             if (!columnFlow.children[i] || String(columnFlow.children[i]).indexOf("QQuickRepeater") == 0
                      || !columnFlow.children[i].visible) continue
@@ -127,34 +105,26 @@ Item {
             columnFlow.children[i].anchors.left = columnFlow.children[lastItem[newColumn]].left
             columnFlow.children[i].anchors.right = columnFlow.children[lastItem[newColumn]].right
 
+            columnFlow.children[i].heightChanged.connect(function() {
+                print("CHANGED")
+            })
+
             lastItem[newColumn] = i
             columnHeights[newColumn] += columnFlow.children[i].height
         }
 
         var cHeight = 0
-        print("HEIGHTS:", JSON.stringify(columnHeights))
+
         for (i = 0; i < columnHeights.length; i++) {
-            if (columnHeights[i] === null)
-                continue
-            cHeight = Math.max(cHeight, columnHeights[i])
+            print(columnHeights[i], cHeight)
+            if (columnHeights[i])
+                cHeight = Math.max(cHeight, columnHeights[i])
         }
-        print(cHeight, cHeight/units.gu(1))
+
         contentHeight = cHeight
 
         updateWidths()
     }
-
-
-//    function appendToModel (item) {
-//        // only if model is an array
-//        if ((model instanceof Array) !== (item instanceof Array))
-//            return
-
-//        if (item instanceof Array)
-//            for (var i = 0; i < item.length; i++)
-//                repeater.model.push(item)
-//    }
-
 
     Repeater {
         id: repeater

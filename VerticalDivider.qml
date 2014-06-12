@@ -21,8 +21,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.    *
  ***************************************************************************/
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components 1.1
+import Ubuntu.Components.ListItems 1.0
 import QtQuick 2.0
 
 Rectangle {
@@ -44,7 +44,7 @@ Rectangle {
             centerIn: parent
         }
     }
-    width: divider.visible ? divider.height : 1
+    width: divider.visible ? divider.height : units.dp(1)
 
     anchors {
         top: parent ? parent.top : undefined

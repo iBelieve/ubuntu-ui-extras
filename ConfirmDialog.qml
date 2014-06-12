@@ -21,75 +21,59 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.    *
  ***************************************************************************/
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components 1.1
+import Ubuntu.Components.Popups 1.0
+import Ubuntu.Components.ListItems 1.0 as ListItem
 
-Item {
+Dialog {
     id: root
 
-    clip: true
-    //color: "white"
-    //color: Qt.rgba(0.2,0.2,0.2,0.4)
+    signal accepted
+    signal rejected
 
-    width: units.gu(10)
-    height: units.gu(30)
+    property alias cancelText: cancelButton.text
+    property alias acceptText: okButton.text
+    property alias acceptColor: okButton.color
 
-    property alias selectedIndex: listView.currentIndex
+    Item {
+        width: parent.width
+        height: childrenRect.height
 
-    onSelectedIndexChanged: {
-        value = values[selectedIndex]
-    }
+        Button {
+            id: cancelButton
+            objectName: "cancelButton"
+            text: i18n.tr("Cancel")
 
-    property var value: model.get(listView.currentIndex).modelData
-
-    property var values: []
-
-    Component.onCompleted: selectedIndex = values.indexOf(value)
-
-    PathView {
-        id: listView
-        anchors.fill: parent
-        model: values
-
-        delegate: Standard {
-            highlightWhenPressed: false
-            Label {
-                anchors.centerIn: parent
-                text: modelData
+            anchors {
+                left: parent.left
+                right: parent.horizontalCenter
+                rightMargin: units.gu(1)
             }
-            onClicked: listView.currentIndex = index
-            showDivider: false
+
+            color: "gray"
+
+            onClicked: {
+                PopupUtils.close(root)
+                rejected()
+            }
         }
 
-        pathItemCount: listView.height / highlightItem.height + 1
-        preferredHighlightBegin: 0.5
-        preferredHighlightEnd: 0.5
-        clip: true
+        Button {
+            id: okButton
+            objectName: "okButton"
 
-        property int contentHeight: pathItemCount * highlightItem.height
+            anchors {
+                left: parent.horizontalCenter
+                right: parent.right
+                leftMargin: units.gu(1)
+            }
 
-        path: Path {
-            startX: listView.width / 2; startY: -(listView.contentHeight - listView.height) / 2
-            PathLine { x: listView.width / 2; y: listView.height + (listView.contentHeight - listView.height) / 2 }
-        }
+            text: i18n.tr("Ok")
 
-        maximumFlickVelocity: 400
-
-        highlight: Rectangle {
-            width: parent.width
-            height: units.gu(6)
-            property color baseColor: "#dd4814"
-            gradient: Gradient {
-                GradientStop {
-                    position: 0.00;
-                    color: Qt.lighter(baseColor, 1.3);
-                }
-                GradientStop {
-                    position: 1.0;
-                    color: baseColor;
-                }
+            onClicked: {
+                PopupUtils.close(root)
+                accepted()
             }
         }
     }
-
 }

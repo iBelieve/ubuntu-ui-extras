@@ -21,8 +21,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.    *
  ***************************************************************************/
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components 1.1
+import Ubuntu.Components.ListItems 1.0
 
 /*!
     \qmltype Sidebar
@@ -53,6 +53,10 @@ Rectangle {
     color: Qt.rgba(0.2,0.2,0.2,0.6)
 
     property bool expanded: true
+
+    function toggle() {
+        expanded = !expanded
+    }
 
     property string mode: "left" // or "right"
     property alias header: headerItem.text
@@ -133,7 +137,7 @@ Rectangle {
                 for (var i=0; i < item.children.length; i++) {
                     var child = item.children[i];
                     if (internal.isVerticalFlickable(child)) {
-                        if (child.anchors.top === page.top || child.anchors.fill === page) {
+                        if (child.anchors.top === projectPage.top || child.anchors.fill === projectPage) {
                             return item.children[i];
                         }
                     }

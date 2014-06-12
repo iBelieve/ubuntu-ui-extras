@@ -21,57 +21,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.    *
  ***************************************************************************/
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.Popups 0.1
-import Ubuntu.Components.ListItems 0.1 as ListItem
-import "listutils.js" as List
+import Ubuntu.Components 1.1
+import Ubuntu.Components.ListItems 1.0
 
-Object {
-    id: document
+Header {
 
-    property var data: {
-        return {}
-    }
+    property alias text: label.text
 
-    property int version: 1
-
-    function set(name, value) {
-        data[name] = value
-        data = data //TODO: Is there a better way?
-    }
-
-    function sync(name, value) {
-        data[name] = value
-        data = data //TODO: Is there a better way?
-        return Qt.binding(function() { return get(name, value) })
-    }
-
-    function get(name, def) {
-        if (data.hasOwnProperty(name)) {
-            return data[name]
-        } else {
-            return def
+    //FIXME: Hack because of Suru theme!
+    Label {
+        id: label
+        anchors {
+            verticalCenter: parent.verticalCenter
+            left: parent.left
+            leftMargin:units.gu(1)
         }
-    }
 
-    signal upgrade(var version)
-    signal save()
-    signal loaded()
-
-    function fromJSON(json) {
-        data = JSON.parse(JSON.stringify(json))
-        if (data.version < document.version) {
-            upgrade(data.version)
-        } else if (data.version > document.version) {
-            throw "Stored version is higher than the supported version: " + data.version + " > " + document.version
-        }
-        loaded()
-    }
-
-    function toJSON() {
-        save()
-        var json = JSON.parse(JSON.stringify(data))
-        json.version = document.version
-        return json
+        fontSize: "medium"
+        color: "#666"
     }
 }

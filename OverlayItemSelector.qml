@@ -15,12 +15,12 @@
  */
 
 import QtQuick 2.0
-import Ubuntu.Components.ListItems 0.1 as ListItem
-import Ubuntu.Components 0.1
+import Ubuntu.Components.ListItems 1.0 as ListItem
+import Ubuntu.Components 1.1
 
 /*!
     \qmltype ItemSelector
-    \inqmlmodule Ubuntu.Components.ListItems 0.1
+    \inqmlmodule Ubuntu.Components.ListItems 1.0
     \ingroup ubuntu-listitems
     \brief ListItem displaying either a single selected value or expanded multiple choice with an optional image and subtext when not expanded, when expanding it opens a
     listing of all the possible values for selection with an additional option of always being expanded. If multiple choice is selected the list is expanded automatically.
@@ -29,7 +29,7 @@ import Ubuntu.Components 0.1
 
     Examples:
     \qml
-        import Ubuntu.Components.ListItems 0.1 as ListItem
+        import Ubuntu.Components.ListItems 1.0 as ListItem
         Column {
             anchors.left: parent.left
             anchors.right: parent.right

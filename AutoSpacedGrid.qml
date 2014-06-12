@@ -67,12 +67,12 @@ Item {
         }
 
         xCount = count
-        print("Spacing is", spacing, xCount)
+        //print("Spacing is", spacing, xCount)
     }
 
     function calcSpacing(count) {
         var spacing = (width - count * cellWidth)/(count)
-        print("Spacing for count", count, "is", spacing/8, "gu")
+        //print("Spacing for count", count, "is", spacing/8, "gu")
         return spacing
     }
 

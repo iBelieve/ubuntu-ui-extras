@@ -16,7 +16,7 @@
 
 /*!
     \qmltype OptionSelectorDelegate
-    \inqmlmodule Ubuntu.Components 0.1
+    \inqmlmodule Ubuntu.Components 1.1
     \ingroup ubuntu-components
     \brief OptionSelector delegate which can display text, subtext and an image from a custom model.
 
@@ -24,7 +24,7 @@
 
     Examples:
     \qml
-        import Ubuntu.Components 0.1
+        import Ubuntu.Components 1.1
         Column {
             width: 250
             OptionSelector {
@@ -44,10 +44,10 @@
 */
 
 import QtQuick 2.0
-import Ubuntu.Components.ListItems 0.1 as ListItem
-import Ubuntu.Components 0.1
+import Ubuntu.Components.ListItems 1.0 as ListItem
+import Ubuntu.Components 1.1
 
-ListItem.Standard {
+OverlayStandard {
     id: option
 
     __height: units.gu(5)
@@ -358,12 +358,13 @@ ListItem.Standard {
             }
             Label {
                 text: option.text === "" ? modelData : option.text
-                color: Theme.palette.selected.overlayText
+                color: Theme.palette.normal.overlayText
             }
             Label {
                 text: option.subText
                 visible: option.subText !== "" ? true : false
                 fontSize: "small"
+                opacity: 0.7
                 color: Theme.palette.normal.overlayText
             }
         }

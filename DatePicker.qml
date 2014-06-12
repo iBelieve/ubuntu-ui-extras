@@ -21,8 +21,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.    *
  ***************************************************************************/
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components 1.1
+import Ubuntu.Components.ListItems 1.0
 import "dateutils.js" as DateUtils
 
 UbuntuShape {
@@ -39,11 +39,11 @@ UbuntuShape {
         date.setMinutes(0)
         date.setSeconds(0)
 
-        print("Year", yearSpinner.value)
+        //print("Year", yearSpinner.value)
         date.setFullYear(yearSpinner.value)
-        print("Month:", monthSpinner.selectedIndex)
+        //print("Month:", monthSpinner.selectedIndex)
         date.setMonth(monthSpinner.selectedIndex)
-        print("Date:", dateSpinner.value)
+        //print("Date:", dateSpinner.value)
         date.setDate(dateSpinner.value)
         return date
     }
