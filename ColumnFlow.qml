@@ -76,9 +76,9 @@ Item {
             columnFlow.children[i].anchors.right = undefined
             columnFlow.children[i].width = columnFlow.width / columns
 
-            columnFlow.children[i].heightChanged.connect(function() {
-                print("CHANGED")
-            })
+//            columnFlow.children[i].heightChanged.connect(function() {
+//                print("CHANGED")
+//            })
 
             lastI = i
             count++
@@ -105,9 +105,9 @@ Item {
             columnFlow.children[i].anchors.left = columnFlow.children[lastItem[newColumn]].left
             columnFlow.children[i].anchors.right = columnFlow.children[lastItem[newColumn]].right
 
-            columnFlow.children[i].heightChanged.connect(function() {
-                print("CHANGED")
-            })
+//            columnFlow.children[i].heightChanged.connect(function() {
+//                print("CHANGED")
+//            })
 
             lastItem[newColumn] = i
             columnHeights[newColumn] += columnFlow.children[i].height
@@ -116,7 +116,7 @@ Item {
         var cHeight = 0
 
         for (i = 0; i < columnHeights.length; i++) {
-            print(columnHeights[i], cHeight)
+            //print(columnHeights[i], cHeight)
             if (columnHeights[i])
                 cHeight = Math.max(cHeight, columnHeights[i])
         }

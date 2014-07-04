@@ -22,14 +22,13 @@ import Ubuntu.Components.Popups 1.0
 Dialog {
     id: root
 
-    property var action
+    signal accepted()
 
     Button {
         text: i18n.tr("Ok")
         onClicked: {
             PopupUtils.close(root)
-            if (root.action)
-                root.action()
+            accepted()
         }
     }
 }
