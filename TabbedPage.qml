@@ -9,10 +9,11 @@ Page {
     property var tabs: []
     property int selectedIndex: 0
     property var selectedTab: tabs[selectedIndex]
+    property bool showTabs: tabs.length > 0
 
     Item {
         id: tabbar
-        visible: tabs.length > 1 && page.active
+        visible: showTabs && page.active
 
         property var headerItem: header
 
@@ -26,7 +27,7 @@ Page {
         }
 
         anchors.bottom: parent.bottom
-        height: units.gu(3)
+        height: units.gu(3.5)
         parent: header
         width: parent.width
         BorderImage {
@@ -62,40 +63,33 @@ Page {
         Row {
             id: row
             anchors.centerIn: parent
-            anchors.verticalCenterOffset: units.gu(-0.1)
-            spacing: units.gu(1)
 
             Repeater {
                 model: tabs
-                delegate: Row {
+                delegate: Item {
+                    height: tabbar.height
+                    width: Math.min(tabbar.width/tabs.length, label.width + units.gu(12))
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: selectedIndex = index
+                    }
+
                     Label {
+                        id: label
                         text: modelData
-                        width: units.gu(10)
-                        horizontalAlignment: index === 0 ? Text.AlignRight
-                                                         : index ===  tabs.length - 1 ? Text.AlignLeftt
-                                                                                      : Text.AlignHCenter
-                        color: selectedIndex == index ? UbuntuColors.orange : Theme.palette.selected.backgroundText
 
-                        Behavior on color {
-                            ColorAnimation {
-                                duration: UbuntuAnimation.FastDuration
-                            }
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: selectedIndex = index
-                        }
-                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.centerIn: parent
                     }
 
-                    Label {
-                        text: "|"
-                        visible: index < tabs.length - 1
-                        opacity: 0.75
-                    }
+                    Rectangle {
+                        width: label.width + units.gu(4)
+                        height: units.gu(0.2)
+                        color: UbuntuColors.orange
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.bottom: parent.bottom
 
-                    spacing: units.gu(1)
+                        opacity: selectedIndex == index ? 1 : 0
+                    }
                 }
             }
         }
