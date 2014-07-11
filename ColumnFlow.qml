@@ -56,6 +56,11 @@ Item {
         if (columnFlow.repeaterCompleted === false)
             return
 
+        if (columns === 0) {
+            contentHeight = 0
+            return
+        }
+
         var i, j
         var columnHeights = new Array(columns);
         var lastItem = new Array(columns)
@@ -63,10 +68,10 @@ Item {
         var count = 0
 
         //add the first <column> elements
-        ////print(columns,columnFlow.children.length)
         for (i = 0; count < columns && i < columnFlow.children.length; i++) {
             if (!columnFlow.children[i] || String(columnFlow.children[i]).indexOf("QQuickRepeater") == 0
                      || !columnFlow.children[i].visible) continue
+
 
             lastItem[count] = i
             columnHeights[count] = columnFlow.children[i].height
@@ -77,7 +82,7 @@ Item {
             columnFlow.children[i].width = columnFlow.width / columns
 
             columnFlow.children[i].heightChanged.connect(function() {
-                print("CHANGED")
+                reEvalColumns()
             })
 
             lastI = i
@@ -106,7 +111,7 @@ Item {
             columnFlow.children[i].anchors.right = columnFlow.children[lastItem[newColumn]].right
 
             columnFlow.children[i].heightChanged.connect(function() {
-                print("CHANGED")
+                reEvalColumns()
             })
 
             lastItem[newColumn] = i
@@ -116,7 +121,6 @@ Item {
         var cHeight = 0
 
         for (i = 0; i < columnHeights.length; i++) {
-            print(columnHeights[i], cHeight)
             if (columnHeights[i])
                 cHeight = Math.max(cHeight, columnHeights[i])
         }
