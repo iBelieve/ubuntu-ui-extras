@@ -81,10 +81,6 @@ Item {
             columnFlow.children[i].anchors.right = undefined
             columnFlow.children[i].width = columnFlow.width / columns
 
-            columnFlow.children[i].heightChanged.connect(function() {
-                reEvalColumns()
-            })
-
             lastI = i
             count++
         }
@@ -109,10 +105,6 @@ Item {
             columnFlow.children[i].anchors.top = columnFlow.children[lastItem[newColumn]].bottom
             columnFlow.children[i].anchors.left = columnFlow.children[lastItem[newColumn]].left
             columnFlow.children[i].anchors.right = columnFlow.children[lastItem[newColumn]].right
-
-            columnFlow.children[i].heightChanged.connect(function() {
-                reEvalColumns()
-            })
 
             lastItem[newColumn] = i
             columnHeights[newColumn] += columnFlow.children[i].height
