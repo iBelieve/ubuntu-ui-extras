@@ -25,6 +25,7 @@ Rectangle {
     property string text
     property MainView mainView
     property var queue: []
+    property alias textColor: label.color
 
     Component.onCompleted: mainView = findMainView() //This cannot be done as a property binding because the method will later return the QQuickRootItem.
 
