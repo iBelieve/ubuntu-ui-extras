@@ -44,7 +44,7 @@ Dialog {
         validator: RegExpValidator {
             regExp: /.+/
         }
-        style: DialogTextFieldStyle {}
+        //style: DialogTextFieldStyle {}
     }
 
     Item {
@@ -61,7 +61,7 @@ Dialog {
                 rightMargin: units.gu(1)
             }
 
-            color: "gray"
+            //color: "gray"
 
             onTriggered: {
                 PopupUtils.close(root)
@@ -81,6 +81,7 @@ Dialog {
 
             text: i18n.tr("Ok")
             enabled: textField.acceptableInput
+            color: UbuntuColors.orange
 
             onTriggered: {
                 print("TRIGGERED")
