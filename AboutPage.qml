@@ -26,12 +26,14 @@ import Ubuntu.Components.Popups 1.0
 import Ubuntu.Components.ListItems 1.0 as ListItem
 import "../qml-extras/listutils.js" as List
 
-TabbedPage {
+Page {
     id: page
     
     title: i18n.tr("About")
 
-    tabs: [i18n.tr("About"), i18n.tr("Credits")]
+    head.sections {
+        model: [i18n.tr("About"), i18n.tr("Credits")]
+    }
 
     property string appName
     property var credits
@@ -73,7 +75,7 @@ TabbedPage {
             UbuntuNumberAnimation {}
         }
 
-        property bool show: selectedTab === i18n.tr("About")
+        property bool show: head.sections.selectedIndex == 0
 
         Column {
             anchors {
@@ -203,7 +205,7 @@ TabbedPage {
             UbuntuNumberAnimation {}
         }
 
-        property bool show: selectedTab === i18n.tr("Credits")
+        property bool show: head.sections.selectedIndex == 1
 
         ListView {
             anchors.fill: parent
