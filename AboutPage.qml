@@ -32,11 +32,12 @@ Page {
     title: i18n.tr("About")
 
     head.sections {
-        model: [i18n.tr("About"), i18n.tr("Credits")]
+        model: credits.length > 0 ? [i18n.tr("About"), i18n.tr("Credits")]
+                                  : undefined
     }
 
     property string appName
-    property var credits
+    property var credits: []
     property string website
     property string reportABug
     property string version
@@ -75,7 +76,7 @@ Page {
             UbuntuNumberAnimation {}
         }
 
-        property bool show: head.sections.selectedIndex == 0
+        property bool show: head.sections.selectedIndex <= 0
 
         Column {
             anchors {
