@@ -25,7 +25,7 @@ Rectangle {
     property string text
     property MainView mainView
     property var queue: []
-    property alias textColor: label.color
+    property color textColor: "white"
 
     Component.onCompleted: mainView = findMainView() //This cannot be done as a property binding because the method will later return the QQuickRootItem.
 
@@ -57,6 +57,7 @@ Rectangle {
         anchors.centerIn: parent
         text: notification.text
         fontSize: "medium"
+        color: textColor
     }
 
     Timer {
@@ -80,4 +81,3 @@ Rectangle {
         return up
     }
 }
-
