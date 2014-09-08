@@ -35,8 +35,14 @@ Page {
     property color incompletePage
 
     property bool exitable: false
+    property bool swipingEnabled: true
 
     signal finished
+
+    property bool showSkipButton: true
+    property bool showFooter: true
+
+    property alias currentIndex: listView.currentIndex
 
     onFinished: {
         if (exitable) {
@@ -85,6 +91,8 @@ Page {
         width: contentWidth
         text: listView.currentIndex === 0 ? i18n.tr("Already used %1? <b>Skip the tutorial</b>").arg(appName) : i18n.tr("Skip")
 
+        visible: showSkipButton
+
         anchors {
             top: parent.top
             left: parent.left
@@ -102,7 +110,7 @@ Page {
         anchors {
             left: parent.left
             right: parent.right
-            top: skipLabel.bottom
+            top: showSkipButton ? skipLabel.bottom : parent.top
             bottom: divider.top
         }
 
@@ -112,6 +120,7 @@ Page {
         highlightMoveDuration: UbuntuAnimation.FastDuration
         highlightRangeMode: ListView.StrictlyEnforceRange
         highlightFollowsCurrentItem: true
+        interactive: swipingEnabled
 
         delegate: Item {
             width: listView.width
@@ -139,6 +148,14 @@ Page {
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         height: units.gu(6)
+
+        anchors.bottomMargin: showFooter ? 0 : -(footer.height + divider.height)
+
+        Behavior on anchors.bottomMargin {
+            UbuntuNumberAnimation {
+                duration: UbuntuAnimation.SlowDuration
+            }
+        }
 
         spacing: (height - size)/2
 
@@ -169,10 +186,5 @@ Page {
                 }
             }
         }
-    }
-
-    tools: ToolbarItems {
-        locked: !exitable
-        opened: exitable
     }
 }

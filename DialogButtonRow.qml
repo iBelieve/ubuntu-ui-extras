@@ -9,9 +9,13 @@ Item {
     signal accepted
     signal rejected
 
+    property alias acceptText: okButton.text
+    property alias rejectText: cancelButton.text
+
     property alias enabled: okButton.enabled
 
     Button {
+        id: cancelButton
         objectName: "cancelButton"
         text: i18n.tr("Cancel")
 
