@@ -40,7 +40,7 @@ Dialog {
         id: textField
         objectName: "inputField"
 
-        onAccepted: okButton.clicked()
+        onAccepted: buttons.accepted()
         validator: RegExpValidator {
             regExp: /.+/
         }
