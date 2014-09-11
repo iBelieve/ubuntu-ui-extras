@@ -47,47 +47,19 @@ Dialog {
         //style: DialogTextFieldStyle {}
     }
 
-    Item {
-        width: parent.width
-        height: childrenRect.height
+    DialogButtonRow {
+        id: buttons
 
-        Button {
-            objectName: "cancelButton"
-            text: i18n.tr("Cancel")
+        enabled: textField.acceptableInput
 
-            anchors {
-                left: parent.left
-                right: parent.horizontalCenter
-                rightMargin: units.gu(1)
-            }
-
-            //color: "gray"
-
-            onTriggered: {
-                PopupUtils.close(root)
-                rejected()
-            }
+        onAccepted: {
+            PopupUtils.close(root)
+            root.accepted()
         }
 
-        Button {
-            id: okButton
-            objectName: "okButton"
-
-            anchors {
-                left: parent.horizontalCenter
-                right: parent.right
-                leftMargin: units.gu(1)
-            }
-
-            text: i18n.tr("Ok")
-            enabled: textField.acceptableInput
-            color: UbuntuColors.orange
-
-            onTriggered: {
-                print("TRIGGERED")
-                PopupUtils.close(root)
-                accepted()
-            }
+        onRejected: {
+            PopupUtils.close(root)
+            root.rejected()
         }
     }
 }

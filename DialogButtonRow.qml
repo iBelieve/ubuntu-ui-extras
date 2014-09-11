@@ -11,6 +11,7 @@ Item {
 
     property alias acceptText: okButton.text
     property alias rejectText: cancelButton.text
+    property alias acceptColor: okButton.color
 
     property alias enabled: okButton.enabled
 
@@ -41,7 +42,7 @@ Item {
         }
 
         text: i18n.tr("Ok")
-        color: UbuntuColors.orange
+        color: "#3fb24f"
 
         onTriggered: {
             print("TRIGGERED")

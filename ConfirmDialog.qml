@@ -31,49 +31,21 @@ Dialog {
     signal accepted
     signal rejected
 
-    property alias cancelText: cancelButton.text
-    property alias acceptText: okButton.text
-    property alias acceptColor: okButton.color
+    property alias cancelText: buttons.rejectText
+    property alias acceptText: buttons.acceptText
+    property alias acceptColor: buttons.acceptColor
 
-    Item {
-        width: parent.width
-        height: childrenRect.height
+    DialogButtonRow {
+        id: buttons
 
-        Button {
-            id: cancelButton
-            objectName: "cancelButton"
-            text: i18n.tr("Cancel")
-
-            anchors {
-                left: parent.left
-                right: parent.horizontalCenter
-                rightMargin: units.gu(1)
-            }
-
-            color: "gray"
-
-            onClicked: {
-                PopupUtils.close(root)
-                rejected()
-            }
+        onAccepted: {
+            PopupUtils.close(root)
+            root.accepted()
         }
 
-        Button {
-            id: okButton
-            objectName: "okButton"
-
-            anchors {
-                left: parent.horizontalCenter
-                right: parent.right
-                leftMargin: units.gu(1)
-            }
-
-            text: i18n.tr("Ok")
-
-            onClicked: {
-                PopupUtils.close(root)
-                accepted()
-            }
+        onRejected: {
+            PopupUtils.close(root)
+            root.rejected()
         }
     }
 }
