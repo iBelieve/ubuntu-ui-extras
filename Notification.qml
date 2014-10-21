@@ -35,14 +35,14 @@ Rectangle {
 
     function show(text) {
         queue.push(text)
-        if (!showing) {
+        if (!showing && !timer.running) { //!timer.running for the time between two notifications (when timer.interval === 800)
             update()
         }
     }
 
     function update() {
         notification.text = ""
-        notification.text = queue.pop()
+        notification.text = queue.shift()
         notification.showing = true
     }
 
